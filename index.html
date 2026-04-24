@@ -1,0 +1,1069 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Facundo Bolani — Business Analyst | BI & Data Analytics</title>
+  <meta name="description" content="Business Analyst con experiencia en BI, Data Analytics, SQL y Python. Transformo datos dispersos en decisiones de negocio accionables. Disponible para posiciones remotas e internacionales.">
+  <meta name="keywords" content="Business Analyst, BI Analyst, Data Analyst, SQL, Python, Power BI, Metabase, Uruguay, remoto">
+  <meta name="author" content="Facundo Bolani">
+  <meta name="robots" content="index, follow">
+
+  <!-- Open Graph -->
+  <meta property="og:title" content="Facundo Bolani — Business Analyst | BI & Data Analytics">
+  <meta property="og:description" content="Transformo datos dispersos en decisiones de negocio accionables. +13 años liderando con datos.">
+  <meta property="og:type" content="website">
+  <meta property="og:url" content="https://facundobolani.com">
+  <meta property="og:locale" content="es_UY">
+
+  <!-- Favicon -->
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>FB</text></svg>">
+
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;0,600;1,300;1,400&family=DM+Sans:ital,wght@0,300;0,400;0,500;1,300&display=swap" rel="stylesheet">
+
+  <style>
+    /* ─── TOKENS ─── */
+    :root {
+      --cream:   #F9F6F0;
+      --cream2:  #F2EDE4;
+      --ink:     #1A1916;
+      --ink60:   #5A5750;
+      --ink30:   #C2BFBA;
+      --amber:   #B8862A;
+      --amber-l: #D4A84B;
+      --white:   #FDFCFA;
+      --green:   #2D8A4E;
+
+      --serif: 'Cormorant Garamond', Georgia, serif;
+      --sans:  'DM Sans', system-ui, sans-serif;
+
+      --max: 1140px;
+      --gutter: clamp(1.5rem, 5vw, 4rem);
+    }
+
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    html { scroll-behavior: smooth; }
+
+    body {
+      background: var(--cream);
+      color: var(--ink);
+      font-family: var(--sans);
+      font-size: 16px;
+      line-height: 1.6;
+      -webkit-font-smoothing: antialiased;
+    }
+
+    /* ─── NAV ─── */
+    nav {
+      position: fixed; top: 0; left: 0; right: 0; z-index: 100;
+      padding: 1.25rem var(--gutter);
+      display: flex; align-items: center; justify-content: space-between;
+      background: rgba(249,246,240,0.88);
+      backdrop-filter: blur(12px);
+      -webkit-backdrop-filter: blur(12px);
+      border-bottom: 1px solid var(--ink30);
+      transition: border-color 0.3s;
+    }
+    .nav-logo {
+      font-family: var(--serif);
+      font-size: 1.25rem;
+      font-weight: 500;
+      letter-spacing: -0.01em;
+      color: var(--ink);
+      text-decoration: none;
+    }
+    .nav-links {
+      display: flex; gap: 2rem; list-style: none;
+    }
+    .nav-links a {
+      font-size: 0.8rem; letter-spacing: 0.08em; text-transform: uppercase;
+      color: var(--ink60); text-decoration: none; font-weight: 500;
+      transition: color 0.2s;
+    }
+    .nav-links a:hover { color: var(--ink); }
+    .nav-cta {
+      font-size: 0.78rem; letter-spacing: 0.06em; text-transform: uppercase;
+      font-weight: 500; color: var(--ink);
+      border: 1px solid var(--ink);
+      padding: 0.45rem 1.1rem;
+      text-decoration: none;
+      transition: background 0.2s, color 0.2s;
+    }
+    .nav-cta:hover { background: var(--ink); color: var(--cream); }
+
+    /* Hamburger */
+    .hamburger {
+      display: none; background: none; border: none; cursor: pointer;
+      width: 28px; height: 20px; position: relative; z-index: 110;
+    }
+    .hamburger span {
+      display: block; width: 100%; height: 2px; background: var(--ink);
+      position: absolute; left: 0; transition: all 0.3s;
+    }
+    .hamburger span:nth-child(1) { top: 0; }
+    .hamburger span:nth-child(2) { top: 9px; }
+    .hamburger span:nth-child(3) { top: 18px; }
+    .hamburger.active span:nth-child(1) { top: 9px; transform: rotate(45deg); }
+    .hamburger.active span:nth-child(2) { opacity: 0; }
+    .hamburger.active span:nth-child(3) { top: 9px; transform: rotate(-45deg); }
+
+    .mobile-menu {
+      display: none;
+      position: fixed; top: 0; left: 0; right: 0; bottom: 0;
+      background: var(--cream);
+      z-index: 99;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      gap: 2rem;
+    }
+    .mobile-menu.active { display: flex; }
+    .mobile-menu a {
+      font-family: var(--serif);
+      font-size: 1.8rem; font-weight: 400;
+      color: var(--ink); text-decoration: none;
+      transition: color 0.2s;
+    }
+    .mobile-menu a:hover { color: var(--amber); }
+
+    /* ─── HERO ─── */
+    #hero {
+      min-height: 100svh;
+      padding: calc(6rem + 80px) var(--gutter) 6rem;
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      align-items: end;
+      gap: 3rem;
+      max-width: var(--max);
+      margin: 0 auto;
+    }
+    .hero-tag {
+      font-size: 0.72rem; letter-spacing: 0.14em; text-transform: uppercase;
+      color: var(--amber); font-weight: 500; margin-bottom: 1.5rem;
+      display: flex; align-items: center; gap: 0.6rem;
+    }
+    .hero-tag::before { content:''; width: 2rem; height: 1px; background: var(--amber); display: block; }
+    h1.hero-name {
+      font-family: var(--serif);
+      font-size: clamp(3.5rem, 8vw, 7rem);
+      font-weight: 300;
+      line-height: 0.95;
+      letter-spacing: -0.02em;
+      color: var(--ink);
+      margin-bottom: 0.15em;
+    }
+    h1.hero-name em {
+      font-style: italic;
+      color: var(--amber);
+    }
+    .hero-subtitle {
+      font-family: var(--serif);
+      font-size: clamp(1.1rem, 2.2vw, 1.5rem);
+      font-weight: 300;
+      font-style: italic;
+      color: var(--ink60);
+      margin-top: 1.5rem;
+      max-width: 28ch;
+      line-height: 1.4;
+    }
+    .hero-right {
+      display: flex;
+      flex-direction: column;
+      gap: 1.5rem;
+      padding-bottom: 0.5rem;
+    }
+    .hero-desc {
+      font-size: 1rem; line-height: 1.75; color: var(--ink60);
+      font-weight: 300; max-width: 38ch;
+    }
+
+    /* Open to work badge */
+    .open-badge {
+      display: inline-flex; align-items: center; gap: 0.5rem;
+      padding: 0.4rem 0.9rem;
+      border: 1px solid var(--green);
+      color: var(--green);
+      font-size: 0.7rem; letter-spacing: 0.08em; text-transform: uppercase;
+      font-weight: 500; margin-bottom: 1rem;
+    }
+    .open-badge::before {
+      content: '';
+      width: 6px; height: 6px;
+      background: var(--green);
+      border-radius: 50%;
+      animation: pulse 2s infinite;
+    }
+    @keyframes pulse {
+      0%, 100% { opacity: 1; }
+      50% { opacity: 0.4; }
+    }
+
+    .hero-stats {
+      display: grid; grid-template-columns: repeat(3, 1fr);
+      border-top: 1px solid var(--ink30);
+      padding-top: 1.5rem; gap: 1rem;
+    }
+    .stat-n {
+      font-family: var(--serif);
+      font-size: 2.2rem; font-weight: 300; line-height: 1;
+      color: var(--ink); margin-bottom: 0.2rem;
+    }
+    .stat-l { font-size: 0.7rem; letter-spacing: 0.1em; text-transform: uppercase; color: var(--ink60); }
+
+    .hero-scroll {
+      margin-top: 3rem;
+      display: flex; align-items: center; gap: 0.6rem;
+      font-size: 0.72rem; letter-spacing: 0.1em; text-transform: uppercase;
+      color: var(--ink60);
+    }
+    .scroll-line { width: 3rem; height: 1px; background: var(--ink30); }
+
+    /* Horizontal marquee strip */
+    .marquee-strip {
+      border-top: 1px solid var(--ink30);
+      border-bottom: 1px solid var(--ink30);
+      padding: 0.85rem 0;
+      overflow: hidden;
+      background: var(--cream2);
+    }
+    .marquee-inner {
+      display: flex; gap: 3rem;
+      animation: marquee 28s linear infinite;
+      white-space: nowrap;
+    }
+    .marquee-item {
+      font-size: 0.7rem; letter-spacing: 0.14em; text-transform: uppercase;
+      color: var(--ink60); font-weight: 500; flex-shrink: 0;
+    }
+    .marquee-item span { color: var(--amber); margin-right: 3rem; }
+    @keyframes marquee {
+      from { transform: translateX(0); }
+      to   { transform: translateX(-50%); }
+    }
+
+    /* ─── SECTION SHARED ─── */
+    section {
+      padding: 7rem var(--gutter);
+      max-width: var(--max);
+      margin: 0 auto;
+    }
+    .section-header {
+      display: flex; align-items: baseline; gap: 1.5rem;
+      margin-bottom: 4rem; border-bottom: 1px solid var(--ink30); padding-bottom: 1.5rem;
+    }
+    .section-num {
+      font-family: var(--serif); font-size: 0.85rem; color: var(--amber);
+      font-style: italic; font-weight: 400;
+    }
+    h2.section-title {
+      font-family: var(--serif);
+      font-size: clamp(2rem, 4vw, 3.2rem);
+      font-weight: 300; letter-spacing: -0.02em; line-height: 1;
+    }
+    h2.section-title em { font-style: italic; color: var(--amber); }
+
+    /* ─── ABOUT ─── */
+    #about { background: var(--cream2); max-width: 100%; padding: 7rem var(--gutter); }
+    #about .inner { max-width: var(--max); margin: 0 auto; }
+    .about-grid {
+      display: grid; grid-template-columns: 1fr 1.4fr; gap: 5rem; align-items: start;
+    }
+    .about-photo-block {
+      position: relative;
+    }
+    .about-photo {
+      width: 100%; aspect-ratio: 3/4;
+      object-fit: cover; display: block;
+    }
+    .photo-label {
+      position: absolute; bottom: -1rem; right: -1rem;
+      background: var(--ink); color: var(--cream);
+      padding: 0.5rem 1rem;
+      font-size: 0.75rem; letter-spacing: 0.12em; text-transform: uppercase;
+    }
+    .about-lead {
+      font-family: var(--serif);
+      font-size: clamp(1.4rem, 2.5vw, 2rem);
+      font-weight: 300; line-height: 1.35; letter-spacing: -0.01em;
+      color: var(--ink); margin-bottom: 2rem;
+    }
+    .about-lead em { font-style: italic; color: var(--amber); }
+    .about-body {
+      font-size: 0.95rem; line-height: 1.85; color: var(--ink60);
+      font-weight: 300;
+    }
+    .about-body p + p { margin-top: 1.25rem; }
+    .about-interests {
+      margin-top: 2.5rem; display: flex; flex-wrap: wrap; gap: 0.6rem;
+    }
+    .interest-tag {
+      font-size: 0.75rem; letter-spacing: 0.1em; text-transform: uppercase;
+      border: 1px solid var(--ink30); color: var(--ink60);
+      padding: 0.35rem 0.75rem; font-weight: 500;
+    }
+    .photo-grid {
+      margin-top: 5rem;
+      display: grid;
+      grid-template-columns: 1.6fr 1fr 1fr;
+      grid-template-rows: 220px 220px 220px;
+      gap: 6px;
+    }
+    .photo-grid-item {
+      overflow: hidden;
+      position: relative;
+    }
+    .photo-grid-item img {
+      width: 100%; height: 100%; object-fit: cover;
+      transition: transform 0.5s ease;
+    }
+    .photo-grid-item:hover img { transform: scale(1.04); }
+    .photo-grid-item.tall { grid-row: span 2; }
+    .photo-grid-item img { cursor: pointer; }
+    .about-photo { cursor: pointer; }
+
+    /* ─── LIGHTBOX ─── */
+    .lightbox {
+      display: none;
+      position: fixed; top: 0; left: 0; right: 0; bottom: 0;
+      background: rgba(26,25,22,0.92);
+      z-index: 200;
+      align-items: center; justify-content: center;
+      cursor: pointer;
+      animation: lbFadeIn 0.25s ease;
+    }
+    .lightbox.active { display: flex; }
+    .lightbox img {
+      max-width: 90vw; max-height: 90vh;
+      object-fit: contain;
+      border: 2px solid rgba(255,255,255,0.08);
+    }
+    .lightbox-close {
+      position: absolute; top: 1.5rem; right: 1.5rem;
+      background: none; border: none; color: var(--cream);
+      font-size: 2rem; cursor: pointer; line-height: 1;
+      opacity: 0.6; transition: opacity 0.2s;
+    }
+    .lightbox-close:hover { opacity: 1; }
+    @keyframes lbFadeIn {
+      from { opacity: 0; }
+      to { opacity: 1; }
+    }
+
+    /* ─── SKILLS ─── */
+    #skills { background: var(--cream); }
+    .skills-grid {
+      display: grid; grid-template-columns: repeat(4, 1fr); gap: 1.5px;
+      background: var(--ink30);
+    }
+    .skill-card {
+      background: var(--cream);
+      padding: 2rem 1.5rem;
+      text-align: center;
+      transition: background 0.25s;
+    }
+    .skill-card:hover { background: var(--cream2); }
+    .skill-icon {
+      font-size: 1.6rem;
+      margin-bottom: 0.75rem;
+      display: block;
+    }
+    .skill-name {
+      font-family: var(--serif);
+      font-size: 1.1rem; font-weight: 400;
+      color: var(--ink); margin-bottom: 0.3rem;
+    }
+    .skill-level {
+      font-size: 0.75rem; letter-spacing: 0.1em; text-transform: uppercase;
+      color: var(--amber);
+    }
+
+    /* ─── EXPERIENCE ─── */
+    .timeline { display: flex; flex-direction: column; gap: 0; }
+    .timeline-item {
+      display: grid; grid-template-columns: 14ch 1fr;
+      gap: 2rem; padding: 2.5rem 0;
+      border-bottom: 1px solid var(--ink30);
+      transition: background 0.2s;
+    }
+    .timeline-item:first-child { border-top: 1px solid var(--ink30); }
+    .t-date {
+      font-size: 0.72rem; letter-spacing: 0.1em; text-transform: uppercase;
+      color: var(--ink60); padding-top: 0.3rem; font-weight: 500;
+    }
+    .t-role {
+      font-family: var(--serif); font-size: 1.4rem; font-weight: 400;
+      letter-spacing: -0.01em; margin-bottom: 0.2rem;
+    }
+    .t-company {
+      font-size: 0.78rem; letter-spacing: 0.08em; text-transform: uppercase;
+      color: var(--amber); font-weight: 500; margin-bottom: 0.75rem;
+    }
+    .t-desc { font-size: 0.9rem; line-height: 1.75; color: var(--ink60); font-weight: 300; }
+    .t-tags { display: flex; flex-wrap: wrap; gap: 0.4rem; margin-top: 1rem; }
+    .t-tag {
+      font-size: 0.75rem; letter-spacing: 0.08em; text-transform: uppercase;
+      background: var(--cream2); color: var(--ink60);
+      padding: 0.2rem 0.6rem; border: 1px solid var(--ink30);
+    }
+
+    /* ─── EDUCATION ─── */
+    #education { background: var(--cream2); max-width: 100%; padding: 7rem var(--gutter); }
+    #education .inner { max-width: var(--max); margin: 0 auto; }
+    .edu-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 3rem; }
+    .edu-card {
+      padding: 2.5rem; border: 1px solid var(--ink30);
+      transition: background 0.25s;
+    }
+    .edu-card:hover { background: rgba(249,246,240,0.5); }
+    .edu-years {
+      font-size: 0.7rem; letter-spacing: 0.12em; text-transform: uppercase;
+      color: var(--amber); font-weight: 500; margin-bottom: 0.75rem;
+    }
+    .edu-degree {
+      font-family: var(--serif); font-size: 1.3rem; font-weight: 400;
+      line-height: 1.2; margin-bottom: 0.3rem;
+    }
+    .edu-school {
+      font-size: 0.85rem; color: var(--ink60); font-weight: 300;
+      margin-bottom: 1rem;
+    }
+    .edu-detail {
+      font-size: 0.85rem; line-height: 1.7; color: var(--ink60); font-weight: 300;
+    }
+
+    /* ─── PROJECTS ─── */
+    #projects { background: var(--ink); max-width: 100%; padding: 7rem var(--gutter); }
+    #projects .inner { max-width: var(--max); margin: 0 auto; }
+    #projects .section-header { border-color: rgba(255,255,255,0.12); }
+    #projects .section-num { color: var(--amber-l); }
+    #projects h2.section-title { color: var(--cream); }
+    #projects h2.section-title em { color: var(--amber-l); }
+    .projects-grid {
+      display: grid; grid-template-columns: repeat(3, 1fr); gap: 1.5px;
+      background: rgba(255,255,255,0.08);
+    }
+    .project-card {
+      background: var(--ink); padding: 2.5rem 2rem;
+      display: flex; flex-direction: column; gap: 1rem;
+      transition: background 0.25s;
+      cursor: pointer;
+    }
+    .project-card:hover { background: #232119; }
+    .project-icon {
+      width: 2.5rem; height: 2.5rem;
+      border: 1px solid rgba(255,255,255,0.15);
+      display: flex; align-items: center; justify-content: center;
+      font-size: 1rem;
+      color: var(--amber-l);
+    }
+    .project-name {
+      font-family: var(--serif); font-size: 1.3rem; font-weight: 400;
+      color: var(--cream); line-height: 1.2; letter-spacing: -0.01em;
+    }
+    .project-desc { font-size: 0.85rem; line-height: 1.7; color: rgba(249,246,240,0.5); font-weight: 300; }
+    .project-meta {
+      margin-top: auto; display: flex; justify-content: space-between; align-items: center;
+      padding-top: 1.5rem; border-top: 1px solid rgba(255,255,255,0.08);
+    }
+    .project-lang { font-size: 0.75rem; letter-spacing: 0.12em; text-transform: uppercase; color: var(--amber-l); }
+    .project-link { font-size: 0.75rem; letter-spacing: 0.1em; text-transform: uppercase; color: rgba(255,255,255,0.35); text-decoration: none; transition: color 0.2s; }
+    .project-link:hover { color: var(--cream); }
+    .projects-note {
+      text-align: center; margin-top: 3rem;
+      font-size: 0.85rem; color: rgba(249,246,240,0.35); font-weight: 300;
+      font-style: italic;
+    }
+
+    /* ─── WRITING ─── */
+    .writing-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 0; }
+    .post-card {
+      padding: 3rem 2.5rem; border: 1px solid var(--ink30);
+      margin: -1px 0 0 -1px;
+      display: flex; flex-direction: column; gap: 1rem;
+      transition: background 0.25s;
+      cursor: pointer;
+      text-decoration: none; color: inherit;
+    }
+    .post-card:hover { background: var(--cream2); }
+    .post-tag {
+      font-size: 0.75rem; letter-spacing: 0.12em; text-transform: uppercase;
+      color: var(--amber); font-weight: 500;
+    }
+    .post-title {
+      font-family: var(--serif); font-size: 1.5rem; font-weight: 400;
+      line-height: 1.25; letter-spacing: -0.01em; color: var(--ink);
+    }
+    .post-excerpt { font-size: 0.88rem; line-height: 1.75; color: var(--ink60); font-weight: 300; }
+    .post-footer {
+      margin-top: auto; display: flex; justify-content: space-between; align-items: center;
+      padding-top: 1.5rem; border-top: 1px solid var(--ink30);
+    }
+    .post-date { font-size: 0.75rem; letter-spacing: 0.1em; text-transform: uppercase; color: var(--ink60); }
+    .post-read { font-size: 0.75rem; letter-spacing: 0.1em; text-transform: uppercase; color: var(--amber); }
+
+    /* ─── CONTACT ─── */
+    #contact { padding: 7rem var(--gutter); }
+    #contact .inner { max-width: var(--max); margin: 0 auto; }
+    .contact-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 5rem; }
+    .contact-big {
+      font-family: var(--serif);
+      font-size: clamp(2.5rem, 6vw, 5rem);
+      font-weight: 300; line-height: 0.95; letter-spacing: -0.03em;
+    }
+    .contact-big em { font-style: italic; color: var(--amber); }
+    .contact-availability {
+      margin-top: 1.5rem;
+      font-size: 0.85rem; line-height: 1.7; color: var(--ink60); font-weight: 300;
+    }
+    .contact-links { display: flex; flex-direction: column; gap: 1.5rem; padding-top: 0.5rem; }
+    .contact-link {
+      display: flex; justify-content: space-between; align-items: center;
+      padding: 1.25rem 0; border-bottom: 1px solid var(--ink30);
+      text-decoration: none; color: var(--ink);
+      font-size: 0.85rem; font-weight: 300; letter-spacing: 0.02em;
+      transition: color 0.2s;
+    }
+    .contact-link:hover { color: var(--amber); }
+    .contact-link-label { font-size: 0.75rem; letter-spacing: 0.12em; text-transform: uppercase; color: var(--ink60); }
+    .contact-link-arrow { color: var(--ink30); transition: transform 0.2s, color 0.2s; }
+    .contact-link:hover .contact-link-arrow { transform: translate(3px, -3px); color: var(--amber); }
+
+    /* ─── FOOTER ─── */
+    footer {
+      border-top: 1px solid var(--ink30);
+      padding: 2rem var(--gutter);
+      display: flex; justify-content: space-between; align-items: center;
+      max-width: 100%; color: var(--ink60);
+      font-size: 0.72rem; letter-spacing: 0.06em;
+    }
+
+    /* ─── ANIMATIONS ─── */
+    .fade-in { opacity: 0; transform: translateY(20px); transition: opacity 0.7s ease, transform 0.7s ease; }
+    .fade-in.visible { opacity: 1; transform: translateY(0); }
+
+    /* ─── RESPONSIVE ─── */
+    @media (max-width: 900px) {
+      .nav-links { display: none; }
+      .nav-cta { display: none; }
+      .hamburger { display: block; }
+
+      #hero { grid-template-columns: 1fr; align-items: start; }
+      .hero-right { padding-top: 2rem; }
+      .about-grid { grid-template-columns: 1fr; }
+      .about-photo-block { max-width: 320px; margin: 0 auto 2rem; }
+      .skills-grid { grid-template-columns: repeat(2, 1fr); }
+      .projects-grid { grid-template-columns: 1fr; }
+      .writing-grid { grid-template-columns: 1fr; }
+      .edu-grid { grid-template-columns: 1fr; }
+      .contact-grid { grid-template-columns: 1fr; }
+      .timeline-item { grid-template-columns: 1fr; gap: 0.5rem; }
+      .photo-grid {
+        grid-template-columns: 1fr 1fr;
+        grid-template-rows: 200px 200px;
+      }
+      .photo-grid-item.tall { grid-row: span 2; }
+      footer { flex-direction: column; gap: 0.5rem; text-align: center; }
+    }
+
+    @media (max-width: 500px) {
+      .skills-grid { grid-template-columns: 1fr 1fr; }
+      .hero-stats { grid-template-columns: repeat(3, 1fr); gap: 0.5rem; }
+      .stat-n { font-size: 1.8rem; }
+    }
+
+    /* ─── STRUCTURED DATA (hidden) ─── */
+    .sr-only {
+      position: absolute; width: 1px; height: 1px; padding: 0; margin: -1px;
+      overflow: hidden; clip: rect(0,0,0,0); white-space: nowrap; border: 0;
+    }
+  </style>
+</head>
+<body>
+
+  <!-- Structured Data for SEO -->
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "Person",
+    "name": "Facundo Bolani",
+    "url": "https://facundobolani.com",
+    "email": "bolani.facundo@gmail.com",
+    "jobTitle": "Business Analyst",
+    "description": "Business Intelligence Analyst con experiencia en SQL, Python, Metabase y Power BI",
+    "knowsAbout": ["Business Intelligence", "Data Analytics", "SQL", "Python", "Power BI", "Metabase", "KPI Optimization"],
+    "alumniOf": {
+      "@type": "CollegeOrUniversity",
+      "name": "Universidad ORT Uruguay"
+    },
+    "sameAs": [
+      "https://www.linkedin.com/in/facundo-bolani/"
+    ]
+  }
+  </script>
+
+  <!-- NAV -->
+  <nav>
+    <a class="nav-logo" href="#">Facundo Bolani</a>
+    <ul class="nav-links">
+      <li><a href="#about">Sobre mi</a></li>
+      <li><a href="#skills">Skills</a></li>
+      <li><a href="#experience">Experiencia</a></li>
+      <li><a href="#projects">Proyectos</a></li>
+      <li><a href="#writing">Escritura</a></li>
+      <li><a href="#contact">Contacto</a></li>
+    </ul>
+    <a class="nav-cta" href="#contact">Hablemos</a>
+    <button class="hamburger" aria-label="Menu" onclick="toggleMenu()">
+      <span></span><span></span><span></span>
+    </button>
+  </nav>
+
+  <!-- Mobile Menu -->
+  <div class="mobile-menu" id="mobileMenu">
+    <a href="#about" onclick="toggleMenu()">Sobre mi</a>
+    <a href="#skills" onclick="toggleMenu()">Skills</a>
+    <a href="#experience" onclick="toggleMenu()">Experiencia</a>
+    <a href="#projects" onclick="toggleMenu()">Proyectos</a>
+    <a href="#writing" onclick="toggleMenu()">Escritura</a>
+    <a href="#contact" onclick="toggleMenu()">Contacto</a>
+  </div>
+
+  <!-- HERO -->
+  <div id="hero">
+    <div class="hero-left fade-in">
+      <div class="open-badge">Disponible para trabajar</div>
+      <div class="hero-tag">Uruguay</div>
+      <h1 class="hero-name">Facundo<br><em>Bolani</em></h1>
+      <p class="hero-subtitle">Datos dispersos convertidos en decisiones de negocio.</p>
+    </div>
+    <div class="hero-right fade-in" style="transition-delay: 0.15s">
+      <p class="hero-desc">
+        Business Analyst con formacion en Negocios Digitales y +13 anos
+        liderando equipos donde cada decision se sostenia en metricas y datos en tiempo real.
+        Hoy aplico esa mentalidad a proyectos de Business Intelligence.
+      </p>
+      <div class="hero-stats">
+        <div>
+          <div class="stat-n">13+</div>
+          <div class="stat-l">Anos de actividad</div>
+        </div>
+        <div>
+          <div class="stat-n">BI</div>
+          <div class="stat-l">SQL, Python, Metabase</div>
+        </div>
+        <div>
+          <div class="stat-n">ORT</div>
+          <div class="stat-l">Negocios Digitales</div>
+        </div>
+      </div>
+      <div class="hero-scroll">
+        <span class="scroll-line"></span>
+        Scroll para explorar
+      </div>
+    </div>
+  </div>
+
+  <!-- MARQUEE -->
+  <div class="marquee-strip">
+    <div class="marquee-inner">
+      <span class="marquee-item">SQL <span>·</span></span>
+      <span class="marquee-item">Python <span>·</span></span>
+      <span class="marquee-item">Power BI <span>·</span></span>
+      <span class="marquee-item">Metabase <span>·</span></span>
+      <span class="marquee-item">Data Modeling <span>·</span></span>
+      <span class="marquee-item">ETL <span>·</span></span>
+      <span class="marquee-item">Machine Learning <span>·</span></span>
+      <span class="marquee-item">KPI Optimization <span>·</span></span>
+      <span class="marquee-item">Business Intelligence <span>·</span></span>
+      <span class="marquee-item">Scrum <span>·</span></span>
+      <span class="marquee-item">SQL <span>·</span></span>
+      <span class="marquee-item">Python <span>·</span></span>
+      <span class="marquee-item">Power BI <span>·</span></span>
+      <span class="marquee-item">Metabase <span>·</span></span>
+      <span class="marquee-item">Data Modeling <span>·</span></span>
+      <span class="marquee-item">ETL <span>·</span></span>
+      <span class="marquee-item">Machine Learning <span>·</span></span>
+      <span class="marquee-item">KPI Optimization <span>·</span></span>
+      <span class="marquee-item">Business Intelligence <span>·</span></span>
+      <span class="marquee-item">Scrum <span>·</span></span>
+    </div>
+  </div>
+
+  <!-- ABOUT -->
+  <section id="about">
+    <div class="inner">
+      <div class="section-header fade-in">
+        <span class="section-num">01</span>
+        <h2 class="section-title">Sobre <em>mi</em></h2>
+      </div>
+      <div class="about-grid">
+        <div class="about-photo-block fade-in">
+          <img class="about-photo" src="uploads/Male Facu Guille.jpeg" alt="Facundo con su familia" onclick="openLightbox(this.src)">
+        </div>
+        <div class="about-text fade-in" style="transition-delay: 0.1s">
+          <p class="about-lead">
+            No soy solo un analista tecnico. Vengo de un mundo donde los datos
+            nunca son un informe final: son la base para <em>tomar la proxima decision</em>.
+          </p>
+          <div class="about-body">
+            <p>
+              Durante mas de una decada lidere equipos en el deporte profesional,
+              donde cada decision se sostenia en metricas y datos en tiempo real: GPS,
+              carga de trabajo, KPIs de rendimiento por jugador y por equipo. Ese background
+              me dio algo que no se enseña en un bootcamp: saber leer el dato desde la
+              pregunta de negocio, no desde la herramienta.
+            </p>
+            <p>
+              Hoy aplico esa misma mentalidad como Business Intelligence Analyst. Diseno
+              dashboards, modelo datos con SQL y Python, defino KPIs con las areas de
+              negocio y traduzco lo tecnico a lenguaje de stakeholders.
+            </p>
+            <p>
+              Por fuera del trabajo soy papa de Guillermo, la persona que mas me cambio
+              la vida. Mi pareja Male es trail runner — ella corre montanas y yo la banco
+              desde la llegada. Vivimos en Uruguay, viajamos seguido a la Patagonia, y
+              nunca falta un partido de futbol en el calendario.
+            </p>
+          </div>
+          <div class="about-interests">
+            <span class="interest-tag">Business Intelligence</span>
+            <span class="interest-tag">Inteligencia Artificial</span>
+            <span class="interest-tag">Blockchain</span>
+            <span class="interest-tag">Data Analytics</span>
+            <span class="interest-tag">Startups</span>
+            <span class="interest-tag">Patagonia</span>
+            <span class="interest-tag">Futbol</span>
+            <span class="interest-tag">Trail Running</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- PHOTO GRID -->
+      <div class="photo-grid fade-in">
+        <div class="photo-grid-item tall">
+          <img src="uploads/DSC_0379.JPG" alt="Futbol" onclick="openLightbox(this.src)">
+        </div>
+        <div class="photo-grid-item">
+          <img src="uploads/Facu guille 2.jpeg" alt="Facu y Guille" onclick="openLightbox(this.src)">
+        </div>
+        <div class="photo-grid-item">
+          <img src="uploads/Gonza peñarol.JPG" alt="Peñarol" onclick="openLightbox(this.src)">
+        </div>
+        <div class="photo-grid-item">
+          <img src="uploads/Facu guille.jpeg" alt="Facu y Guille" onclick="openLightbox(this.src)">
+        </div>
+        <div class="photo-grid-item">
+          <img src="uploads/Male Corre.jpeg" alt="Male corriendo" onclick="openLightbox(this.src)">
+        </div>
+        <div class="photo-grid-item">
+          <img src="uploads/Foto Guille.jpg" alt="Guille" onclick="openLightbox(this.src)">
+        </div>
+      </div>
+
+    </div>
+  </section>
+
+  <!-- SKILLS -->
+  <section id="skills">
+    <div class="section-header fade-in">
+      <span class="section-num">02</span>
+      <h2 class="section-title">Stack <em>tecnico</em></h2>
+    </div>
+    <div class="skills-grid fade-in">
+      <div class="skill-card">
+        <span class="skill-icon">&#9638;</span>
+        <div class="skill-name">SQL</div>
+        <div class="skill-level">Intermedio</div>
+      </div>
+      <div class="skill-card">
+        <span class="skill-icon">&#9672;</span>
+        <div class="skill-name">Python</div>
+        <div class="skill-level">Avanzado</div>
+      </div>
+      <div class="skill-card">
+        <span class="skill-icon">&#9670;</span>
+        <div class="skill-name">Metabase</div>
+        <div class="skill-level">Intermedio</div>
+      </div>
+      <div class="skill-card">
+        <span class="skill-icon">&#9674;</span>
+        <div class="skill-name">Power BI</div>
+        <div class="skill-level">Intermedio-Avanzado</div>
+      </div>
+      <div class="skill-card">
+        <span class="skill-icon">&#8862;</span>
+        <div class="skill-name">R</div>
+        <div class="skill-level">Intermedio</div>
+      </div>
+      <div class="skill-card">
+        <span class="skill-icon">&#9713;</span>
+        <div class="skill-name">Excel Avanzado</div>
+        <div class="skill-level">Avanzado</div>
+      </div>
+      <div class="skill-card">
+        <span class="skill-icon">&#8644;</span>
+        <div class="skill-name">ETL & Data Modeling</div>
+        <div class="skill-level">Intermedio-Avanzado</div>
+      </div>
+      <div class="skill-card">
+        <span class="skill-icon">&#9881;</span>
+        <div class="skill-name">Machine Learning</div>
+        <div class="skill-level">Intermedio</div>
+      </div>
+    </div>
+  </section>
+
+  <!-- EXPERIENCE -->
+  <section id="experience">
+    <div class="section-header fade-in">
+      <span class="section-num">03</span>
+      <h2 class="section-title">Experiencia</h2>
+    </div>
+    <div class="timeline">
+      <div class="timeline-item fade-in">
+        <div class="t-date">2024 — 2025</div>
+        <div class="t-content">
+          <div class="t-role">Analista BI</div>
+          <div class="t-company">COR (Projectcor) · California, EE.UU. · Remoto</div>
+          <p class="t-desc">Desarrollo de dashboards y reportes en Metabase para el seguimiento de KPIs
+          comerciales y operativos. Analisis, limpieza y modelado de datos mediante SQL y Python
+          para la identificacion de tendencias, desvios y oportunidades de mejora. Definicion y
+          validacion de metricas clave en conjunto con las areas de negocio. Colaboracion con equipos
+          multidisciplinarios para traducir requerimientos de negocio en soluciones basadas en datos.</p>
+          <div class="t-tags">
+            <span class="t-tag">Metabase</span>
+            <span class="t-tag">SQL</span>
+            <span class="t-tag">Python</span>
+            <span class="t-tag">KPIs</span>
+            <span class="t-tag">MSBI</span>
+          </div>
+        </div>
+      </div>
+      <div class="timeline-item fade-in">
+        <div class="t-date">2010 — 2023</div>
+        <div class="t-content">
+          <div class="t-role">Director Tecnico & Performance Analyst</div>
+          <div class="t-company">Liverpool F.C., Ituzaingo F.C., Atenas, Campus RQ & otros · Uruguay</div>
+          <p class="t-desc">+13 anos liderando equipos multidisciplinarios de alto rendimiento en clubes profesionales.
+          Planificacion estrategica de temporadas, analisis de metricas de rendimiento deportivo
+          mediante GPS y sistemas de monitoreo (TRIMP, PlayerLoad, HSR). Toma de decisiones basadas
+          en datos en tiempo real, gestion de stakeholders y desarrollo de talento.</p>
+          <div class="t-tags">
+            <span class="t-tag">Data Analysis</span>
+            <span class="t-tag">KPIs</span>
+            <span class="t-tag">Liderazgo</span>
+            <span class="t-tag">GPS Analytics</span>
+            <span class="t-tag">Stakeholders</span>
+          </div>
+        </div>
+      </div>
+      <div class="timeline-item fade-in">
+        <div class="t-date">2010 — 2022</div>
+        <div class="t-content">
+          <div class="t-role">Docente e Instructor</div>
+          <div class="t-company">IUA, IHHC, Colegio Los Girasoles & otros · Uruguay</div>
+          <p class="t-desc">Diseno e implementacion de programas formativos para publicos diversos.
+          Gestion de grupos, desarrollo de habilidades blandas, evaluacion de desempeno mediante
+          metricas cualitativas y cuantitativas. Comunicacion efectiva con perfiles de todos los niveles.</p>
+          <div class="t-tags">
+            <span class="t-tag">Formacion</span>
+            <span class="t-tag">Comunicacion</span>
+            <span class="t-tag">Liderazgo</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- EDUCATION -->
+  <div id="education">
+    <div class="inner">
+      <div class="section-header fade-in">
+        <span class="section-num">04</span>
+        <h2 class="section-title">Educacion</h2>
+      </div>
+      <div class="edu-grid fade-in">
+        <div class="edu-card">
+          <div class="edu-years">2021 — 2025</div>
+          <div class="edu-degree">Lic. en Negocios Digitales</div>
+          <div class="edu-school">Universidad ORT Uruguay</div>
+          <p class="edu-detail">Formacion hibrida entre tecnologia, datos y negocio.
+          Titulo intermedio obtenido: Analista en Negocios Digitales.
+          Materias clave: BI & Data Analytics, SQL, Python, Machine Learning,
+          Estrategia y Control de Gestion, Marketing Analytics, ERP.</p>
+        </div>
+        <div class="edu-card">
+          <div class="edu-years">Completada</div>
+          <div class="edu-degree">Lic. en Educacion Fisica</div>
+          <div class="edu-school">ISEF — UDELAR</div>
+          <p class="edu-detail">Base en metodologia de entrenamiento, biomecanica
+          y analisis del rendimiento que hoy transfiero al mundo de los datos y la
+          toma de decisiones basada en evidencia.</p>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- PROJECTS -->
+  <div id="projects">
+    <section class="inner">
+      <div class="section-header fade-in">
+        <span class="section-num">05</span>
+        <h2 class="section-title">Proyectos <em>& trabajo</em></h2>
+      </div>
+      <div class="fade-in" style="text-align: center; padding: 4rem 2rem;">
+        <svg width="120" height="120" viewBox="0 0 120 120" fill="none" xmlns="http://www.w3.org/2000/svg" style="margin-bottom: 2rem; opacity: 0.4;">
+          <rect x="20" y="45" width="80" height="55" rx="4" stroke="var(--amber-l)" stroke-width="1.5" fill="none"/>
+          <path d="M35 75 L50 60 L60 68 L80 50 L95 65" stroke="var(--amber-l)" stroke-width="1.5" fill="none" stroke-linecap="round" stroke-linejoin="round"/>
+          <circle cx="45" cy="62" r="4" stroke="var(--amber-l)" stroke-width="1.5" fill="none"/>
+          <rect x="40" y="20" width="40" height="12" rx="3" stroke="var(--amber-l)" stroke-width="1.5" fill="none"/>
+          <line x1="50" y1="26" x2="70" y2="26" stroke="var(--amber-l)" stroke-width="1.5" stroke-linecap="round"/>
+          <path d="M60 32 L60 45" stroke="var(--amber-l)" stroke-width="1.5" stroke-dasharray="3 3"/>
+        </svg>
+        <div style="font-family: var(--serif); font-size: clamp(1.5rem, 3vw, 2.2rem); font-weight: 300; color: var(--cream); margin-bottom: 1rem; letter-spacing: -0.02em;">
+          Espacio en construccion
+        </div>
+        <p style="font-size: 0.9rem; color: rgba(249,246,240,0.4); font-weight: 300; max-width: 40ch; margin: 0 auto; line-height: 1.7;">
+          Estoy preparando proyectos para compartir aca. Mientras tanto, podes ver mi actividad en LinkedIn y GitHub.
+        </p>
+      </div>
+    </section>
+  </div>
+
+  <!-- WRITING -->
+  <section id="writing">
+    <div class="section-header fade-in">
+      <span class="section-num">06</span>
+      <h2 class="section-title">Pensamiento <em>& escritura</em></h2>
+    </div>
+    <div class="writing-grid" id="writingGrid">
+      <!-- Posts se cargan dinamicamente desde posts.json -->
+    </div>
+  </section>
+
+  <!-- CONTACT -->
+  <section id="contact">
+    <div class="inner">
+      <div class="section-header fade-in">
+        <span class="section-num">07</span>
+        <h2 class="section-title">Contacto</h2>
+      </div>
+      <div class="contact-grid">
+        <div class="fade-in">
+          <div class="contact-big">
+            Trabajemos<br><em>juntos.</em>
+          </div>
+          <p class="contact-availability">
+            Abierto a nuevas oportunidades profesionales. Si crees que puedo aportar valor a tu equipo, escribime.
+          </p>
+        </div>
+        <div class="contact-links fade-in" style="transition-delay: 0.1s">
+          <a class="contact-link" href="mailto:bolani.facundo@gmail.com">
+            <div>
+              <div class="contact-link-label">Email</div>
+              <div>bolani.facundo@gmail.com</div>
+            </div>
+            <span class="contact-link-arrow">&#8599;</span>
+          </a>
+          <a class="contact-link" href="https://www.linkedin.com/in/facundo-bolani/" target="_blank" rel="noopener">
+            <div>
+              <div class="contact-link-label">LinkedIn</div>
+              <div>linkedin.com/in/facundo-bolani</div>
+            </div>
+            <span class="contact-link-arrow">&#8599;</span>
+          </a>
+          <a class="contact-link" href="https://github.com/FBC91" target="_blank" rel="noopener">
+            <div>
+              <div class="contact-link-label">GitHub</div>
+              <div>github.com/FBC91</div>
+            </div>
+            <span class="contact-link-arrow">&#8599;</span>
+          </a>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- LIGHTBOX -->
+  <div class="lightbox" id="lightbox" onclick="closeLightbox()">
+    <button class="lightbox-close" aria-label="Cerrar">&times;</button>
+    <img id="lightboxImg" src="" alt="Foto ampliada">
+  </div>
+
+  <!-- FOOTER -->
+  <footer>
+    <span>&copy; 2026 Facundo Bolani</span>
+    <span>facundobolani.com</span>
+    <span>Uruguay</span>
+  </footer>
+
+  <script>
+    // Fade-in on scroll
+    const obs = new IntersectionObserver((entries) => {
+      entries.forEach(e => { if (e.isIntersecting) { e.target.classList.add('visible'); } });
+    }, { threshold: 0.12 });
+    document.querySelectorAll('.fade-in').forEach(el => obs.observe(el));
+
+    // Mobile menu toggle
+    function toggleMenu() {
+      document.querySelector('.hamburger').classList.toggle('active');
+      document.getElementById('mobileMenu').classList.toggle('active');
+      document.body.style.overflow = document.getElementById('mobileMenu').classList.contains('active') ? 'hidden' : '';
+    }
+
+    // Lightbox
+    function openLightbox(src) {
+      document.getElementById('lightboxImg').src = src;
+      document.getElementById('lightbox').classList.add('active');
+      document.body.style.overflow = 'hidden';
+    }
+    function closeLightbox() {
+      document.getElementById('lightbox').classList.remove('active');
+      document.body.style.overflow = '';
+    }
+    document.addEventListener('keydown', e => { if (e.key === 'Escape') closeLightbox(); });
+
+    // Load posts from JSON
+    fetch('posts.json')
+      .then(r => r.json())
+      .then(posts => {
+        const grid = document.getElementById('writingGrid');
+        posts.forEach((p, i) => {
+          const card = document.createElement('a');
+          card.className = 'post-card fade-in visible';
+          card.href = p.url;
+          card.target = '_blank';
+          card.rel = 'noopener';
+          if (i > 0) card.style.transitionDelay = (i * 0.05) + 's';
+          card.innerHTML = `
+            <div class="post-tag">${p.tag}</div>
+            <div class="post-title">${p.title}</div>
+            <p class="post-excerpt">${p.excerpt}</p>
+            <div class="post-footer">
+              <span class="post-date">${p.date}</span>
+              <span class="post-read">Ver en LinkedIn &#8599;</span>
+            </div>`;
+          grid.appendChild(card);
+        });
+      })
+      .catch(() => {
+        document.getElementById('writingGrid').innerHTML =
+          '<p style="color:var(--ink60); font-style:italic; padding:2rem;">Cargando publicaciones...</p>';
+      });
+
+    // Smooth scroll for nav
+    document.querySelectorAll('a[href^="#"]').forEach(a => {
+      a.addEventListener('click', e => {
+        const target = document.querySelector(a.getAttribute('href'));
+        if (target) {
+          e.preventDefault();
+          target.scrollIntoView({ behavior: 'smooth' });
+        }
+      });
+    });
+  </script>
+</body>
+</html>
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                          
