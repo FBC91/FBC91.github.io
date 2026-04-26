@@ -365,9 +365,10 @@
     }
     .skill-card:hover { background: var(--cream2); }
     .skill-icon {
-      font-size: 1.6rem;
-      margin-bottom: 0.75rem;
-      display: block;
+      width: 28px; height: 28px;
+      margin: 0 auto 0.75rem;
+      display: flex; align-items: center; justify-content: center;
+      color: var(--ink60);
     }
     .skill-name {
       font-family: var(--serif);
@@ -578,6 +579,29 @@
       position: absolute; width: 1px; height: 1px; padding: 0; margin: -1px;
       overflow: hidden; clip: rect(0,0,0,0); white-space: nowrap; border: 0;
     }
+
+    /* ─── SKIP LINK ─── */
+    .skip-link {
+      position: absolute; top: -100%; left: 1rem;
+      background: var(--ink); color: var(--cream);
+      padding: 0.5rem 1rem; z-index: 999;
+      font-size: 0.85rem; text-decoration: none;
+      transition: top 0.2s;
+    }
+    .skip-link:focus { top: 0.5rem; }
+
+    /* ─── FOCUS ─── */
+    :focus-visible {
+      outline: 2px solid var(--amber);
+      outline-offset: 3px;
+    }
+
+    /* ─── REDUCED MOTION ─── */
+    @media (prefers-reduced-motion: reduce) {
+      .fade-in { transition: none; opacity: 1; transform: none; }
+      .marquee-inner { animation: none; }
+      .open-badge::before { animation: none; }
+    }
   </style>
 </head>
 <body>
@@ -603,11 +627,13 @@
   }
   </script>
 
+  <a href="#hero" class="skip-link">Saltar al contenido</a>
+
   <!-- NAV -->
   <nav>
     <a class="nav-logo" href="#">Facundo Bolani</a>
     <ul class="nav-links">
-      <li><a href="#about">Sobre mi</a></li>
+      <li><a href="#about">Sobre mí</a></li>
       <li><a href="#skills">Skills</a></li>
       <li><a href="#experience">Experiencia</a></li>
       <li><a href="#projects">Proyectos</a></li>
@@ -622,7 +648,7 @@
 
   <!-- Mobile Menu -->
   <div class="mobile-menu" id="mobileMenu">
-    <a href="#about" onclick="toggleMenu()">Sobre mi</a>
+    <a href="#about" onclick="toggleMenu()">Sobre mí</a>
     <a href="#skills" onclick="toggleMenu()">Skills</a>
     <a href="#experience" onclick="toggleMenu()">Experiencia</a>
     <a href="#projects" onclick="toggleMenu()">Proyectos</a>
@@ -640,14 +666,14 @@
     </div>
     <div class="hero-right fade-in" style="transition-delay: 0.15s">
       <p class="hero-desc">
-        Business Analyst con formacion en Negocios Digitales y +13 anos
-        liderando equipos donde cada decision se sostenia en metricas y datos en tiempo real.
+        Business Analyst con formación en Negocios Digitales y +13 años
+        liderando equipos donde cada decisión se sostenía en métricas y datos en tiempo real.
         Hoy aplico esa mentalidad a proyectos de Business Intelligence.
       </p>
       <div class="hero-stats">
         <div>
           <div class="stat-n">13+</div>
-          <div class="stat-l">Anos de actividad</div>
+          <div class="stat-l">Años de actividad</div>
         </div>
         <div>
           <div class="stat-n">BI</div>
@@ -696,7 +722,7 @@
     <div class="inner">
       <div class="section-header fade-in">
         <span class="section-num">01</span>
-        <h2 class="section-title">Sobre <em>mi</em></h2>
+        <h2 class="section-title">Sobre <em>mí</em></h2>
       </div>
       <div class="about-grid">
         <div class="about-photo-block fade-in">
@@ -704,27 +730,27 @@
         </div>
         <div class="about-text fade-in" style="transition-delay: 0.1s">
           <p class="about-lead">
-            No soy solo un analista tecnico. Vengo de un mundo donde los datos
-            nunca son un informe final: son la base para <em>tomar la proxima decision</em>.
+            No soy solo un analista técnico. Vengo de un mundo donde los datos
+            nunca son un informe final: son la base para <em>tomar la próxima decisión</em>.
           </p>
           <div class="about-body">
             <p>
-              Durante mas de una decada lidere equipos en el deporte profesional,
-              donde cada decision se sostenia en metricas y datos en tiempo real: GPS,
+              Durante más de una década lideré equipos en el deporte profesional,
+              donde cada decisión se sostenía en métricas y datos en tiempo real: GPS,
               carga de trabajo, KPIs de rendimiento por jugador y por equipo. Ese background
               me dio algo que no se enseña en un bootcamp: saber leer el dato desde la
               pregunta de negocio, no desde la herramienta.
             </p>
             <p>
-              Hoy aplico esa misma mentalidad como Business Intelligence Analyst. Diseno
-              dashboards, modelo datos con SQL y Python, defino KPIs con las areas de
-              negocio y traduzco lo tecnico a lenguaje de stakeholders.
+              Hoy aplico esa misma mentalidad como Business Intelligence Analyst. Diseño
+              dashboards, modelo datos con SQL y Python, defino KPIs con las áreas de
+              negocio y traduzco lo técnico a lenguaje de stakeholders.
             </p>
             <p>
-              Por fuera del trabajo soy papa de Guillermo, la persona que mas me cambio
-              la vida. Mi pareja Male es trail runner — ella corre montanas y yo la banco
+              Por fuera del trabajo soy papá de Guillermo, la persona que más me cambió
+              la vida. Mi pareja Male es trail runner — ella corre montañas y yo la banco
               desde la llegada. Vivimos en Uruguay, viajamos seguido a la Patagonia, y
-              nunca falta un partido de futbol en el calendario.
+              nunca falta un partido de fútbol en el calendario.
             </p>
           </div>
           <div class="about-interests">
@@ -743,22 +769,22 @@
       <!-- PHOTO GRID -->
       <div class="photo-grid fade-in">
         <div class="photo-grid-item tall">
-          <img src="uploads/DSC_0379.JPG" alt="Futbol" onclick="openLightbox(this.src)">
+          <img src="uploads/DSC_0379.JPG" alt="Fútbol" loading="lazy" onclick="openLightbox(this.src)">
         </div>
         <div class="photo-grid-item">
-          <img src="uploads/Facu guille 2.jpeg" alt="Facu y Guille" onclick="openLightbox(this.src)">
+          <img src="uploads/Facu guille 2.jpeg" alt="Facu y Guille" loading="lazy" onclick="openLightbox(this.src)">
         </div>
         <div class="photo-grid-item">
-          <img src="uploads/Gonza peñarol.JPG" alt="Peñarol" onclick="openLightbox(this.src)">
+          <img src="uploads/Gonza peñarol.JPG" alt="Peñarol" loading="lazy" onclick="openLightbox(this.src)">
         </div>
         <div class="photo-grid-item">
-          <img src="uploads/Facu guille.jpeg" alt="Facu y Guille" onclick="openLightbox(this.src)">
+          <img src="uploads/Facu guille.jpeg" alt="Facu y Guille" loading="lazy" onclick="openLightbox(this.src)">
         </div>
         <div class="photo-grid-item">
-          <img src="uploads/Male Corre.jpeg" alt="Male corriendo" onclick="openLightbox(this.src)">
+          <img src="uploads/Male Corre.jpeg" alt="Male corriendo" loading="lazy" onclick="openLightbox(this.src)">
         </div>
         <div class="photo-grid-item">
-          <img src="uploads/Foto Guille.jpg" alt="Guille" onclick="openLightbox(this.src)">
+          <img src="uploads/Foto Guille.jpg" alt="Guille" loading="lazy" onclick="openLightbox(this.src)">
         </div>
       </div>
 
@@ -769,46 +795,46 @@
   <section id="skills">
     <div class="section-header fade-in">
       <span class="section-num">02</span>
-      <h2 class="section-title">Stack <em>tecnico</em></h2>
+      <h2 class="section-title">Stack <em>técnico</em></h2>
     </div>
     <div class="skills-grid fade-in">
       <div class="skill-card">
-        <span class="skill-icon">&#9638;</span>
+        <span class="skill-icon"><svg xmlns="http://www.w3.org/2000/svg" width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><ellipse cx="12" cy="5" rx="9" ry="3"/><path d="M21 12c0 1.66-4 3-9 3s-9-1.34-9-3"/><path d="M3 5v14c0 1.66 4 3 9 3s9-1.34 9-3V5"/></svg></span>
         <div class="skill-name">SQL</div>
         <div class="skill-level">Intermedio</div>
       </div>
       <div class="skill-card">
-        <span class="skill-icon">&#9672;</span>
+        <span class="skill-icon"><svg xmlns="http://www.w3.org/2000/svg" width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="16 18 22 12 16 6"/><polyline points="8 6 2 12 8 18"/></svg></span>
         <div class="skill-name">Python</div>
         <div class="skill-level">Avanzado</div>
       </div>
       <div class="skill-card">
-        <span class="skill-icon">&#9670;</span>
+        <span class="skill-icon"><svg xmlns="http://www.w3.org/2000/svg" width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="20" x2="18" y2="10"/><line x1="12" y1="20" x2="12" y2="4"/><line x1="6" y1="20" x2="6" y2="14"/><line x1="2" y1="20" x2="22" y2="20"/></svg></span>
         <div class="skill-name">Metabase</div>
         <div class="skill-level">Intermedio</div>
       </div>
       <div class="skill-card">
-        <span class="skill-icon">&#9674;</span>
+        <span class="skill-icon"><svg xmlns="http://www.w3.org/2000/svg" width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M21.21 15.89A10 10 0 1 1 8 2.83"/><path d="M22 12A10 10 0 0 0 12 2v10z"/></svg></span>
         <div class="skill-name">Power BI</div>
         <div class="skill-level">Intermedio-Avanzado</div>
       </div>
       <div class="skill-card">
-        <span class="skill-icon">&#8862;</span>
+        <span class="skill-icon"><svg xmlns="http://www.w3.org/2000/svg" width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><line x1="4" y1="9" x2="20" y2="9"/><line x1="4" y1="15" x2="20" y2="15"/><line x1="10" y1="3" x2="8" y2="21"/><line x1="16" y1="3" x2="14" y2="21"/></svg></span>
         <div class="skill-name">R</div>
         <div class="skill-level">Intermedio</div>
       </div>
       <div class="skill-card">
-        <span class="skill-icon">&#9713;</span>
+        <span class="skill-icon"><svg xmlns="http://www.w3.org/2000/svg" width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="18" height="18" rx="2"/><line x1="3" y1="9" x2="21" y2="9"/><line x1="3" y1="15" x2="21" y2="15"/><line x1="9" y1="3" x2="9" y2="21"/><line x1="15" y1="3" x2="15" y2="21"/></svg></span>
         <div class="skill-name">Excel Avanzado</div>
         <div class="skill-level">Avanzado</div>
       </div>
       <div class="skill-card">
-        <span class="skill-icon">&#8644;</span>
+        <span class="skill-icon"><svg xmlns="http://www.w3.org/2000/svg" width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="17 1 21 5 17 9"/><path d="M3 11V9a4 4 0 0 1 4-4h14"/><polyline points="7 23 3 19 7 15"/><path d="M21 13v2a4 4 0 0 1-4 4H3"/></svg></span>
         <div class="skill-name">ETL & Data Modeling</div>
         <div class="skill-level">Intermedio-Avanzado</div>
       </div>
       <div class="skill-card">
-        <span class="skill-icon">&#9881;</span>
+        <span class="skill-icon"><svg xmlns="http://www.w3.org/2000/svg" width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><rect x="4" y="4" width="16" height="16" rx="2"/><rect x="9" y="9" width="6" height="6"/><line x1="9" y1="1" x2="9" y2="4"/><line x1="15" y1="1" x2="15" y2="4"/><line x1="9" y1="20" x2="9" y2="23"/><line x1="15" y1="20" x2="15" y2="23"/><line x1="20" y1="9" x2="23" y2="9"/><line x1="20" y1="14" x2="23" y2="14"/><line x1="1" y1="9" x2="4" y2="9"/><line x1="1" y1="14" x2="4" y2="14"/></svg></span>
         <div class="skill-name">Machine Learning</div>
         <div class="skill-level">Intermedio</div>
       </div>
@@ -828,9 +854,9 @@
           <div class="t-role">Analista BI</div>
           <div class="t-company">COR (Projectcor) · California, EE.UU. · Remoto</div>
           <p class="t-desc">Desarrollo de dashboards y reportes en Metabase para el seguimiento de KPIs
-          comerciales y operativos. Analisis, limpieza y modelado de datos mediante SQL y Python
-          para la identificacion de tendencias, desvios y oportunidades de mejora. Definicion y
-          validacion de metricas clave en conjunto con las areas de negocio. Colaboracion con equipos
+          comerciales y operativos. Análisis, limpieza y modelado de datos mediante SQL y Python
+          para la identificación de tendencias, desvíos y oportunidades de mejora. Definición y
+          validación de métricas clave en conjunto con las áreas de negocio. Colaboración con equipos
           multidisciplinarios para traducir requerimientos de negocio en soluciones basadas en datos.</p>
           <div class="t-tags">
             <span class="t-tag">Metabase</span>
@@ -846,10 +872,10 @@
         <div class="t-content">
           <div class="t-role">Director Tecnico & Performance Analyst</div>
           <div class="t-company">Liverpool F.C., Ituzaingo F.C., Atenas, Campus RQ & otros · Uruguay</div>
-          <p class="t-desc">+13 anos liderando equipos multidisciplinarios de alto rendimiento en clubes profesionales.
-          Planificacion estrategica de temporadas, analisis de metricas de rendimiento deportivo
+          <p class="t-desc">+13 años liderando equipos multidisciplinarios de alto rendimiento en clubes profesionales.
+          Planificación estratégica de temporadas, análisis de métricas de rendimiento deportivo
           mediante GPS y sistemas de monitoreo (TRIMP, PlayerLoad, HSR). Toma de decisiones basadas
-          en datos en tiempo real, gestion de stakeholders y desarrollo de talento.</p>
+          en datos en tiempo real, gestión de stakeholders y desarrollo de talento.</p>
           <div class="t-tags">
             <span class="t-tag">Data Analysis</span>
             <span class="t-tag">KPIs</span>
@@ -864,9 +890,9 @@
         <div class="t-content">
           <div class="t-role">Docente e Instructor</div>
           <div class="t-company">IUA, IHHC, Colegio Los Girasoles & otros · Uruguay</div>
-          <p class="t-desc">Diseno e implementacion de programas formativos para publicos diversos.
-          Gestion de grupos, desarrollo de habilidades blandas, evaluacion de desempeno mediante
-          metricas cualitativas y cuantitativas. Comunicacion efectiva con perfiles de todos los niveles.</p>
+          <p class="t-desc">Diseño e implementación de programas formativos para públicos diversos.
+          Gestión de grupos, desarrollo de habilidades blandas, evaluación de desempeño mediante
+          métricas cualitativas y cuantitativas. Comunicación efectiva con perfiles de todos los niveles.</p>
           <div class="t-tags">
             <span class="t-tag">Formacion</span>
             <span class="t-tag">Comunicacion</span>
@@ -882,24 +908,24 @@
     <div class="inner">
       <div class="section-header fade-in">
         <span class="section-num">04</span>
-        <h2 class="section-title">Educacion</h2>
+        <h2 class="section-title">Educación</h2>
       </div>
       <div class="edu-grid fade-in">
         <div class="edu-card">
           <div class="edu-years">2021 — 2025</div>
           <div class="edu-degree">Lic. en Negocios Digitales</div>
           <div class="edu-school">Universidad ORT Uruguay</div>
-          <p class="edu-detail">Formacion hibrida entre tecnologia, datos y negocio.
-          Titulo intermedio obtenido: Analista en Negocios Digitales.
+          <p class="edu-detail">Formación híbrida entre tecnología, datos y negocio.
+          Título intermedio obtenido: Analista en Negocios Digitales.
           Materias clave: BI & Data Analytics, SQL, Python, Machine Learning,
-          Estrategia y Control de Gestion, Marketing Analytics, ERP.</p>
+          Estrategia y Control de Gestión, Marketing Analytics, ERP.</p>
         </div>
         <div class="edu-card">
           <div class="edu-years">Completada</div>
           <div class="edu-degree">Lic. en Educacion Fisica</div>
           <div class="edu-school">ISEF — UDELAR</div>
-          <p class="edu-detail">Base en metodologia de entrenamiento, biomecanica
-          y analisis del rendimiento que hoy transfiero al mundo de los datos y la
+          <p class="edu-detail">Base en metodología de entrenamiento, biomecánica
+          y análisis del rendimiento que hoy transfiero al mundo de los datos y la
           toma de decisiones basada en evidencia.</p>
         </div>
       </div>
@@ -923,10 +949,10 @@
           <path d="M60 32 L60 45" stroke="var(--amber-l)" stroke-width="1.5" stroke-dasharray="3 3"/>
         </svg>
         <div style="font-family: var(--serif); font-size: clamp(1.5rem, 3vw, 2.2rem); font-weight: 300; color: var(--cream); margin-bottom: 1rem; letter-spacing: -0.02em;">
-          Espacio en construccion
+          Espacio en construcción
         </div>
         <p style="font-size: 0.9rem; color: rgba(249,246,240,0.4); font-weight: 300; max-width: 40ch; margin: 0 auto; line-height: 1.7;">
-          Estoy preparando proyectos para compartir aca. Mientras tanto, podes ver mi actividad en LinkedIn y GitHub.
+          Estoy preparando proyectos para compartir acá. Mientras tanto, podés ver mi actividad en LinkedIn y GitHub.
         </p>
       </div>
     </section>
@@ -1066,4 +1092,3 @@
   </script>
 </body>
 </html>
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                          
