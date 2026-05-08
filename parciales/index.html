@@ -753,7 +753,12 @@ async function addMat() {
   document.getElementById('in-mat-nom').value = ''; document.getElementById('in-mat-fecha').value = '';
   toast(`${n} agregada 📚`, 'success'); renderMats(); renderDash(); updSels();
   const { error } = await sb.from('materias').insert({id, user_id:currentUser.id, nombre:n, fecha:f||null, color:selColor});
-  if (error) { S.materias = S.materias.filter(m => m.id !== id); toast('Error: '+error.message, 'error'); renderMats(); }
+  if (error) {
+    console.error('addMat error:', JSON.stringify(error));
+    S.materias = S.materias.filter(m => m.id !== id);
+    toast('Error: ' + error.message + ' [' + error.code + ']', 'error');
+    renderMats();
+  }
 }
 
 async function delMat() {
