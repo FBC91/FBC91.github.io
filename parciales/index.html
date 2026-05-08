@@ -581,9 +581,7 @@ async function signUp() {
 
 async function signOut() {
   await sb.auth.signOut();
-  currentUser = null;
-  S = { materias:[], sesiones:[], streak:0, lastDay:null, apiKey:S.apiKey, iaModel:S.iaModel };
-  showAuth();
+  // onAuthStateChange SIGNED_OUT maneja el resto
 }
 
 function authErr(msg) { const el = document.getElementById('auth-error'); el.textContent = msg; el.style.display = msg ? 'block' : 'none'; }
@@ -591,14 +589,20 @@ function regErr(msg) { const el = document.getElementById('reg-error'); el.textC
 
 // ── DB ────────────────────────────────────────────────────────────────────────
 async function loadFromDB() {
-  const uid = currentUser.id;
+  const userId = currentUser.id;
   const [matsRes, temasRes, fcsRes, sesRes, cfgRes] = await Promise.all([
-    sb.from('materias').select('*').eq('user_id', uid),
-    sb.from('temas').select('*').eq('user_id', uid),
-    sb.from('flashcards').select('*').eq('user_id', uid),
-    sb.from('sesiones').select('*').eq('user_id', uid).order('fecha', {ascending:false}).limit(200),
-    sb.from('user_config').select('*').eq('user_id', uid).maybeSingle()
+    sb.from('materias').select('*').eq('user_id', userId),
+    sb.from('temas').select('*').eq('user_id', userId),
+    sb.from('flashcards').select('*').eq('user_id', userId),
+    sb.from('sesiones').select('*').eq('user_id', userId).order('fecha', {ascending:false}).limit(200),
+    sb.from('user_config').select('*').eq('user_id', userId).maybeSingle()
   ]);
+  // Log errors para debug
+  if (matsRes.error) console.error('materias error:', matsRes.error);
+  if (temasRes.error) console.error('temas error:', temasRes.error);
+  if (fcsRes.error) console.error('flashcards error:', fcsRes.error);
+  if (sesRes.error) console.error('sesiones error:', sesRes.error);
+  if (cfgRes.error && cfgRes.error.code !== 'PGRST116') console.error('user_config error:', cfgRes.error);
   const materias = (matsRes.data || []).map(m => ({ id:m.id, nombre:m.nombre, fecha:m.fecha, color:m.color||'#7c6fff', temas:[], fcs:[] }));
   (temasRes.data || []).forEach(t => { const mat = materias.find(m => m.id === t.materia_id); if (mat) mat.temas.push({id:t.id, nombre:t.nombre, ok:t.ok}); });
   (fcsRes.data || []).forEach(f => { const mat = materias.find(m => m.id === f.materia_id); if (mat) mat.fcs.push({id:f.id, q:f.q, a:f.a}); });
@@ -616,7 +620,12 @@ async function initApp(user) {
   currentUser = user;
   document.getElementById('user-email').textContent = user.email;
   showApp();
-  try { await loadFromDB(); } catch(e) { toast('Error cargando datos: ' + e.message, 'error'); }
+  try {
+    await loadFromDB();
+  } catch(e) {
+    console.error('loadFromDB error:', e);
+    toast('Error cargando datos: ' + (e.message || JSON.stringify(e)), 'error');
+  }
   renderDash(); updSels();
 }
 
@@ -628,8 +637,13 @@ loadLocalSettings();
   else { showAuth(); }
 })();
 sb.auth.onAuthStateChange(async (event, session) => {
-  if (event === 'SIGNED_IN' && session?.user && !currentUser) { await initApp(session.user); }
-  else if (event === 'SIGNED_OUT') { currentUser = null; showAuth(); }
+  if (event === 'SIGNED_IN' && session?.user && !currentUser) {
+    await initApp(session.user);
+  } else if (event === 'SIGNED_OUT') {
+    currentUser = null;
+    S = { materias:[], sesiones:[], streak:0, lastDay:null, apiKey:S.apiKey, iaModel:S.iaModel };
+    showAuth();
+  }
 });
 
 // ── NAV ───────────────────────────────────────────────────────────────────────
