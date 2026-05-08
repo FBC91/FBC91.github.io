@@ -580,8 +580,10 @@ async function signUp() {
 }
 
 async function signOut() {
-  await sb.auth.signOut();
-  // onAuthStateChange SIGNED_OUT maneja el resto
+  try { await sb.auth.signOut(); } catch(e) { console.error('signOut error:', e); }
+  currentUser = null;
+  S = { materias:[], sesiones:[], streak:0, lastDay:null, apiKey:S.apiKey, iaModel:S.iaModel };
+  showAuth();
 }
 
 function authErr(msg) { const el = document.getElementById('auth-error'); el.textContent = msg; el.style.display = msg ? 'block' : 'none'; }
@@ -622,9 +624,12 @@ async function initApp(user) {
   showApp();
   try {
     await loadFromDB();
+    if (S.materias.length === 0) {
+      console.warn('loadFromDB: 0 materias — verificar RLS o key');
+    }
   } catch(e) {
     console.error('loadFromDB error:', e);
-    toast('Error cargando datos: ' + (e.message || JSON.stringify(e)), 'error');
+    toast('Error DB: ' + (e.message || JSON.stringify(e)), 'error');
   }
   renderDash(); updSels();
 }
