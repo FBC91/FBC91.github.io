@@ -939,22 +939,40 @@
         <span class="section-num">05</span>
         <h2 class="section-title">Proyectos <em>& trabajo</em></h2>
       </div>
-      <div class="fade-in" style="text-align: center; padding: 4rem 2rem;">
-        <svg width="120" height="120" viewBox="0 0 120 120" fill="none" xmlns="http://www.w3.org/2000/svg" style="margin-bottom: 2rem; opacity: 0.4;">
-          <rect x="20" y="45" width="80" height="55" rx="4" stroke="var(--amber-l)" stroke-width="1.5" fill="none"/>
-          <path d="M35 75 L50 60 L60 68 L80 50 L95 65" stroke="var(--amber-l)" stroke-width="1.5" fill="none" stroke-linecap="round" stroke-linejoin="round"/>
-          <circle cx="45" cy="62" r="4" stroke="var(--amber-l)" stroke-width="1.5" fill="none"/>
-          <rect x="40" y="20" width="40" height="12" rx="3" stroke="var(--amber-l)" stroke-width="1.5" fill="none"/>
-          <line x1="50" y1="26" x2="70" y2="26" stroke="var(--amber-l)" stroke-width="1.5" stroke-linecap="round"/>
-          <path d="M60 32 L60 45" stroke="var(--amber-l)" stroke-width="1.5" stroke-dasharray="3 3"/>
-        </svg>
-        <div style="font-family: var(--serif); font-size: clamp(1.5rem, 3vw, 2.2rem); font-weight: 300; color: var(--cream); margin-bottom: 1rem; letter-spacing: -0.02em;">
-          Espacio en construcción
+      <div class="projects-grid fade-in">
+
+        <div class="project-card" onclick="window.open('/parciales/', '_blank')">
+          <div class="project-icon">📚</div>
+          <div class="project-name">StudyMate</div>
+          <div class="project-desc">Asistente de estudio universitario con IA. Pegás el contenido de una clase y Claude genera resumen, conceptos clave y preguntas típicas de parcial. Flashcards con flip 3D, timer Pomodoro y seguimiento de progreso por materia.</div>
+          <div class="project-meta">
+            <span class="project-lang">HTML · CSS · JS · Claude API</span>
+            <a href="/parciales/" target="_blank" rel="noopener" class="project-link" onclick="event.stopPropagation()">Abrir ↗</a>
+          </div>
         </div>
-        <p style="font-size: 0.9rem; color: rgba(249,246,240,0.4); font-weight: 300; max-width: 40ch; margin: 0 auto; line-height: 1.7;">
-          Estoy preparando proyectos para compartir acá. Mientras tanto, podés ver mi actividad en LinkedIn y GitHub.
-        </p>
+
+        <div class="project-card" style="cursor:default;opacity:.45;">
+          <div class="project-icon">📊</div>
+          <div class="project-name">Customer Churn Radar</div>
+          <div class="project-desc">Modelo de predicción de churn para retail. Identificación temprana de clientes en riesgo con –18% en tasa de abandono. Stack: Python, scikit-learn, Metabase.</div>
+          <div class="project-meta">
+            <span class="project-lang">Python · ML · BI</span>
+            <span class="project-link" style="cursor:default;">Próximamente</span>
+          </div>
+        </div>
+
+        <div class="project-card" style="cursor:default;opacity:.45;">
+          <div class="project-icon">💰</div>
+          <div class="project-name">Invoice & Cashflow Copilot</div>
+          <div class="project-desc">Automatización del cierre mensual financiero para PyMEs con –70% en tiempo de proceso. Agente con LangChain e integración contable.</div>
+          <div class="project-meta">
+            <span class="project-lang">Python · LangChain · ETL</span>
+            <span class="project-link" style="cursor:default;">Próximamente</span>
+          </div>
+        </div>
+
       </div>
+      <p class="projects-note fade-in">Más proyectos en desarrollo · <a href="https://github.com/FBC91" target="_blank" rel="noopener" style="color:var(--amber-l);text-decoration:none;">GitHub ↗</a></p>
     </section>
   </div>
 
