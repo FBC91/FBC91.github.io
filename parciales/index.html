@@ -580,7 +580,6 @@ async function signUp() {
 }
 
 async function signOut() {
-  if (!confirm('¿Cerrar sesión?')) return;
   await sb.auth.signOut();
   currentUser = null;
   S = { materias:[], sesiones:[], streak:0, lastDay:null, apiKey:S.apiKey, iaModel:S.iaModel };
