@@ -1,0 +1,436 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<title>HotelIA · Demo del Concierge</title>
+<meta name="description" content="Simulación del Concierge multi-agente del Hotel Bahía Serena. Proyecto Intermedio 1 · Universidad ORT Uruguay 2026.">
+<link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🏨</text></svg>">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+:root{
+  --wa-bg:#0b141a;
+  --wa-panel:#202c33;
+  --wa-header:#202c33;
+  --wa-header-bd:#2a3942;
+  --wa-chat-bg:#0b141a;
+  --wa-bubble-in:#202c33;
+  --wa-bubble-out:#005c4b;
+  --wa-text:#e9edef;
+  --wa-text-muted:#8696a0;
+  --wa-accent:#00a884;
+  --wa-input:#2a3942;
+  --wa-input-bd:#374248;
+  --wa-time:rgba(233,237,239,.5);
+  --portfolio-bg:#F9F6F0;
+  --portfolio-ink:#1A1916;
+  --portfolio-amber:#B8862A;
+}
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+html,body{height:100%;}
+body{
+  font-family:'Inter',system-ui,-apple-system,sans-serif;
+  background:var(--portfolio-bg);
+  color:var(--portfolio-ink);
+  -webkit-font-smoothing:antialiased;
+  display:flex;flex-direction:column;
+}
+
+/* ─── Banner superior ─── */
+.demo-banner{
+  background:var(--portfolio-ink);color:#F9F6F0;
+  padding:.6rem 1rem;font-size:.78rem;letter-spacing:.02em;
+  display:flex;align-items:center;justify-content:center;gap:.5rem;flex-wrap:wrap;text-align:center;
+}
+.demo-banner b{color:#D4A84B;letter-spacing:.12em;text-transform:uppercase;font-size:.7rem}
+.demo-banner a{color:#D4A84B;text-decoration:none;border-bottom:1px solid transparent;transition:border-color .2s}
+.demo-banner a:hover{border-color:#D4A84B}
+
+/* ─── Layout ─── */
+.stage{
+  flex:1;display:flex;align-items:stretch;justify-content:center;
+  padding:1.5rem;gap:2rem;
+  background:linear-gradient(180deg,#F2EDE4 0%, #F9F6F0 100%);
+}
+.info-panel{
+  flex:0 0 320px;display:flex;flex-direction:column;gap:1.25rem;
+  padding-top:1rem;color:var(--portfolio-ink);
+}
+.info-panel h1{
+  font-family:'Inter',sans-serif;font-weight:700;font-size:1.5rem;line-height:1.2;
+}
+.info-panel .tag{
+  font-size:.7rem;letter-spacing:.15em;text-transform:uppercase;color:var(--portfolio-amber);
+  font-weight:600;margin-bottom:.4rem;
+}
+.info-panel p{font-size:.9rem;line-height:1.6;color:#5A5750;font-weight:400}
+.info-panel .stack{
+  display:flex;flex-wrap:wrap;gap:.4rem;
+}
+.info-panel .stack span{
+  font-size:.7rem;padding:.25rem .6rem;background:#fff;border:1px solid #C2BFBA;
+  border-radius:99px;color:#5A5750;letter-spacing:.04em;
+}
+.info-panel ul.try{
+  list-style:none;display:flex;flex-direction:column;gap:.4rem;
+  background:#fff;border:1px solid #C2BFBA;border-radius:8px;padding:.9rem 1rem;
+}
+.info-panel ul.try li{
+  font-size:.82rem;color:#5A5750;cursor:pointer;padding:.25rem 0;
+  border-bottom:1px dashed transparent;transition:color .15s, border-color .15s;
+}
+.info-panel ul.try li:hover{color:var(--portfolio-amber);border-bottom-color:var(--portfolio-amber)}
+.info-panel ul.try li::before{content:"›";color:var(--portfolio-amber);margin-right:.4rem;font-weight:600}
+.info-panel .footnote{font-size:.7rem;color:#8B887F;line-height:1.5}
+.info-panel .footnote a{color:var(--portfolio-amber);text-decoration:none}
+
+/* ─── Teléfono / chat ─── */
+.phone{
+  width:100%;max-width:420px;height:min(720px, calc(100vh - 8rem));
+  background:var(--wa-chat-bg);border-radius:18px;overflow:hidden;
+  display:flex;flex-direction:column;
+  box-shadow:0 16px 40px rgba(0,0,0,.18), 0 2px 6px rgba(0,0,0,.08);
+  border:1px solid #d8d3c8;
+}
+.chat-header{
+  background:var(--wa-header);border-bottom:1px solid var(--wa-header-bd);
+  padding:.75rem 1rem;display:flex;align-items:center;gap:.75rem;color:var(--wa-text);
+}
+.avatar{
+  width:40px;height:40px;border-radius:50%;
+  background:linear-gradient(135deg,#00a884,#005c4b);
+  display:flex;align-items:center;justify-content:center;color:#fff;font-weight:700;
+  font-size:1.05rem;flex-shrink:0;
+}
+.hdr-info{flex:1;min-width:0}
+.hdr-name{font-size:.95rem;font-weight:500;line-height:1.2}
+.hdr-status{font-size:.72rem;color:var(--wa-text-muted);line-height:1.2;margin-top:2px}
+.hdr-status .dot{display:inline-block;width:6px;height:6px;background:#00d97e;border-radius:50%;margin-right:4px;vertical-align:middle}
+.icon-btn{
+  background:none;border:none;color:var(--wa-text-muted);cursor:pointer;
+  padding:.4rem;border-radius:50%;font-size:1.1rem;transition:background .15s;
+}
+.icon-btn:hover{background:rgba(255,255,255,.05);color:var(--wa-text)}
+
+.chat-body{
+  flex:1;overflow-y:auto;padding:1rem .6rem .6rem;display:flex;flex-direction:column;gap:.25rem;
+  background-color:#0b141a;
+  background-image:
+    radial-gradient(circle at 20% 30%, rgba(0,168,132,.06) 0%, transparent 40%),
+    radial-gradient(circle at 80% 70%, rgba(0,92,75,.08) 0%, transparent 40%);
+}
+.chat-body::-webkit-scrollbar{width:6px}
+.chat-body::-webkit-scrollbar-thumb{background:rgba(255,255,255,.08);border-radius:3px}
+
+.day-marker{display:flex;justify-content:center;margin:.3rem 0 .7rem}
+.day-marker span{
+  background:rgba(32,44,51,.85);color:var(--wa-text-muted);
+  font-size:.7rem;letter-spacing:.05em;padding:.3rem .7rem;border-radius:6px;
+}
+
+.msg{display:flex;margin:1px 0}
+.msg-bot{justify-content:flex-start}
+.msg-user{justify-content:flex-end}
+.bubble{
+  position:relative;max-width:75%;padding:.5rem .65rem .35rem;border-radius:8px;
+  font-size:.9rem;line-height:1.35;color:var(--wa-text);
+  word-wrap:break-word;white-space:pre-wrap;
+}
+.msg-bot .bubble{background:var(--wa-bubble-in);border-top-left-radius:0}
+.msg-user .bubble{background:var(--wa-bubble-out);border-top-right-radius:0}
+.bubble .time{
+  display:inline-block;font-size:.65rem;color:var(--wa-time);
+  margin-left:.6rem;float:right;margin-top:.15rem;
+}
+.msg-user .bubble .time::after{
+  content:" ✓✓";color:#53bdeb;
+}
+
+/* Typing indicator */
+.bubble.typing{display:inline-flex;gap:3px;padding:.65rem .7rem}
+.bubble.typing span{
+  width:6px;height:6px;border-radius:50%;background:var(--wa-text-muted);
+  animation:blink 1.4s infinite both;
+}
+.bubble.typing span:nth-child(2){animation-delay:.2s}
+.bubble.typing span:nth-child(3){animation-delay:.4s}
+@keyframes blink{0%,80%,100%{opacity:.2}40%{opacity:1}}
+
+.chat-input{
+  background:var(--wa-header);padding:.6rem .75rem;display:flex;align-items:center;gap:.5rem;
+  border-top:1px solid var(--wa-header-bd);
+}
+.chat-input input{
+  flex:1;background:var(--wa-input);border:none;color:var(--wa-text);
+  padding:.7rem 1rem;border-radius:24px;font:inherit;font-size:.92rem;
+  outline:none;
+}
+.chat-input input::placeholder{color:var(--wa-text-muted)}
+.chat-input button{
+  width:42px;height:42px;border:none;background:var(--wa-accent);color:#fff;
+  border-radius:50%;font-size:1.2rem;cursor:pointer;
+  display:flex;align-items:center;justify-content:center;transition:transform .12s, background .12s;
+}
+.chat-input button:hover{background:#00c19a}
+.chat-input button:active{transform:scale(.95)}
+.chat-input button:disabled{background:#374248;cursor:not-allowed}
+
+/* ─── Responsive ─── */
+@media (max-width: 880px){
+  .stage{flex-direction:column;align-items:center;padding:1rem;gap:1.25rem;}
+  .info-panel{flex:initial;width:100%;max-width:420px;padding-top:0;}
+  .phone{height:min(680px, calc(100vh - 13rem));max-width:420px;width:100%;}
+}
+@media (max-width: 480px){
+  .demo-banner{font-size:.7rem}
+  .stage{padding:.4rem;}
+  .phone{
+    border-radius:0;border:none;
+    height:calc(100vh - 2.5rem - 1.5rem);width:100%;max-width:none;
+    box-shadow:none;
+  }
+  .info-panel{display:none}
+}
+</style>
+</head>
+<body>
+
+<div class="demo-banner">
+  <b>Demo</b>
+  <span>Simulación del Concierge multi-agente · próximamente conectado al backend con Claude Sonnet 4.6 + Supabase.</span>
+  <a href="/">← volver al portfolio</a>
+</div>
+
+<main class="stage">
+
+  <aside class="info-panel">
+    <div>
+      <div class="tag">Proyecto Intermedio 1 · ORT 2026</div>
+      <h1>HotelIA<br><span style="color:var(--portfolio-amber);font-weight:400">Concierge multi-agente</span></h1>
+    </div>
+    <p>
+      Sistema multi-agente para hotelería: un orquestador clasifica la intención de cada mensaje y delega a un agente especializado en reservas o en ciclo del huésped. Esta interfaz simula el canal <em>WhatsApp</em> del Hotel Bahía Serena.
+    </p>
+    <div class="stack">
+      <span>Claude Sonnet 4.6</span><span>Claude Haiku 4.5</span><span>LangGraph</span><span>Supabase</span><span>FastAPI</span>
+    </div>
+    <div>
+      <div class="tag" style="margin-bottom:.5rem">Probá preguntando</div>
+      <ul class="try">
+        <li data-prompt="¿A qué hora es el check-in?">Horario de check-in</li>
+        <li data-prompt="¿Cuál es la clave del WiFi?">Clave del WiFi</li>
+        <li data-prompt="¿Hasta qué hora hay desayuno?">Horario de desayuno</li>
+        <li data-prompt="Quiero reservar una habitación doble del 1 al 3 de junio">Reservar habitación</li>
+        <li data-prompt="¿Dónde está ubicado el hotel?">Ubicación</li>
+      </ul>
+    </div>
+    <div class="footnote">
+      Autores: Facundo Bolani, Alan Bancic, Alan Schein ·
+      <a href="https://github.com/FBC91" target="_blank" rel="noopener">código en GitHub ↗</a>
+    </div>
+  </aside>
+
+  <section class="phone" aria-label="Simulador de WhatsApp">
+    <header class="chat-header">
+      <button class="icon-btn" aria-label="Volver" onclick="window.location.href='/'">←</button>
+      <div class="avatar">B</div>
+      <div class="hdr-info">
+        <div class="hdr-name">Hotel Bahía Serena</div>
+        <div class="hdr-status"><span class="dot"></span>en línea</div>
+      </div>
+      <button class="icon-btn" aria-label="Reset conversación" title="Reiniciar conversación" onclick="resetChat()">⟲</button>
+    </header>
+
+    <div class="chat-body" id="chatBody" role="log" aria-live="polite">
+      <div class="day-marker"><span>HOY</span></div>
+    </div>
+
+    <form class="chat-input" id="chatForm" autocomplete="off">
+      <input type="text" id="chatInput" placeholder="Escribí un mensaje" maxlength="500" aria-label="Mensaje">
+      <button type="submit" aria-label="Enviar">➤</button>
+    </form>
+  </section>
+
+</main>
+
+<script>
+"use strict";
+
+// ─── Config ──────────────────────────────────────────────────────────────────
+// Cuando el backend del Concierge esté desplegado, cambiar BACKEND_URL a su
+// origen real (ej. https://api.hotelia.facundobolani.com). Mientras esté vacío
+// se usa el modo demo con respuestas scripted.
+const BACKEND_URL = "";
+const ENDPOINT = "/api/web-chat/inbound";
+
+// ─── State (sessionStorage para que sobreviva al refresh, no al cierre) ─────
+let conversationId = sessionStorage.getItem("hotelai_conv_id") || cryptoRandomUUID();
+sessionStorage.setItem("hotelai_conv_id", conversationId);
+let messages = safeJSON(sessionStorage.getItem("hotelai_msgs")) || [];
+
+function safeJSON(s){try{return JSON.parse(s)}catch(e){return null}}
+function cryptoRandomUUID(){
+  if (window.crypto && crypto.randomUUID) return crypto.randomUUID();
+  // fallback rfc4122 v4
+  return "10000000-1000-4000-8000-100000000000".replace(/[018]/g, c =>
+    (c ^ crypto.getRandomValues(new Uint8Array(1))[0] & 15 >> c / 4).toString(16));
+}
+function saveMessages(){ sessionStorage.setItem("hotelai_msgs", JSON.stringify(messages)); }
+
+function escapeHtml(s){
+  return String(s).replace(/[&<>"']/g, c =>
+    ({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]));
+}
+function fmtTime(iso){
+  return new Date(iso).toLocaleTimeString("es-UY",{hour:"2-digit",minute:"2-digit"});
+}
+
+function addMessage(from, text){
+  const ts = new Date().toISOString();
+  messages.push({from, text, ts});
+  saveMessages();
+  appendBubble({from, text, ts});
+}
+
+function appendBubble({from, text, ts}){
+  const body = document.getElementById("chatBody");
+  const div = document.createElement("div");
+  div.className = "msg msg-" + from;
+  div.innerHTML = `<div class="bubble">${escapeHtml(text)}<span class="time">${fmtTime(ts)}</span></div>`;
+  body.appendChild(div);
+  body.scrollTop = body.scrollHeight;
+}
+
+function renderAll(){
+  const body = document.getElementById("chatBody");
+  body.innerHTML = '<div class="day-marker"><span>HOY</span></div>';
+  for (const m of messages) appendBubble(m);
+}
+
+// ─── Modo demo (sin backend): scripted reply basado en keywords ─────────────
+function mockReply(userText){
+  const t = userText.toLowerCase()
+    .normalize("NFD").replace(/[̀-ͯ]/g,""); // quitar tildes
+  if (/^(hola|holaa|buenas|buen ?dia|buenos ?dias|hi|hello)/.test(t))
+    return "Hola! Soy el asistente del Hotel Bahía Serena. ¿En qué te puedo ayudar?";
+  if (/(wifi|pass|clave|red)/.test(t))
+    return "La red WiFi es BahiaSerena_Guest y la clave es BahiaSerena2026 📶";
+  if (/(check.?in|ingreso|llegada|llegar)/.test(t))
+    return "El check-in es a partir de las 15:00 hs. Si llegás antes podés dejar el equipaje en recepción 🧳";
+  if (/(check.?out|salida|partir)/.test(t))
+    return "El check-out es hasta las 11:00 hs.";
+  if (/(desayuno|breakfast|comida)/.test(t))
+    return "Desayuno buffet de 7:00 a 10:30 hs en el restaurante del primer piso ☕";
+  if (/(direccion|donde|ubicacion|address)/.test(t))
+    return "Estamos en Av. Roosevelt y Parada 5, Punta del Este, Uruguay 🌊";
+  if (/(piscina|pileta|pool)/.test(t))
+    return "La piscina está abierta de 8:00 a 21:00 hs.";
+  if (/(estacionamiento|parking|cochera)/.test(t))
+    return "Tenemos estacionamiento techado sin cargo, sujeto a disponibilidad.";
+  if (/(reservar|reserva|booking|disponibilidad|habitacion)/.test(t))
+    return "Genial! ¿Para qué fechas y cuántas personas? Tenemos habitaciones desde USD 90/noche.";
+  if (/(precio|costo|tarifa|cuanto)/.test(t))
+    return "Las tarifas van de USD 90 (single) a USD 280 (suite). ¿Querés que te arme una cotización?";
+  if (/(cancelar|cancelacion)/.test(t))
+    return "Cancelando con 7+ días: 100% reintegro. Entre 2 y 7 días: 50%. Menos de 48h: sin reintegro.";
+  if (/(mascotas?|perro|gato)/.test(t))
+    return "Por ahora no admitimos mascotas, disculpá 🐾";
+  if (/(gracias|graciass|thanks|thank you)/.test(t))
+    return "¡Un gusto! Cualquier cosa estamos por acá 🙌";
+  return "🛠️ Modo demo · este eco es una respuesta scripted. Cuando el backend del Concierge esté desplegado, Claude Sonnet 4.6 va a tomar tu mensaje y delegarlo al agente correcto (Reservas o Guest Lifecycle).";
+}
+
+async function callBackend(text){
+  if (!BACKEND_URL){
+    // Simula latencia para que se sienta natural.
+    const delay = 600 + Math.random() * 700;
+    await new Promise(r => setTimeout(r, delay));
+    return { text: mockReply(text) };
+  }
+  const resp = await fetch(BACKEND_URL + ENDPOINT, {
+    method: "POST",
+    headers: {"Content-Type":"application/json"},
+    body: JSON.stringify({
+      conversation_id: conversationId,
+      channel: "web_chat",
+      text: text,
+    }),
+  });
+  if (!resp.ok) throw new Error("HTTP " + resp.status);
+  return await resp.json();
+}
+
+// ─── Typing indicator ───────────────────────────────────────────────────────
+function showTyping(){
+  const body = document.getElementById("chatBody");
+  const div = document.createElement("div");
+  div.id = "typingIndicator";
+  div.className = "msg msg-bot";
+  div.innerHTML = '<div class="bubble typing"><span></span><span></span><span></span></div>';
+  body.appendChild(div);
+  body.scrollTop = body.scrollHeight;
+}
+function hideTyping(){
+  const t = document.getElementById("typingIndicator");
+  if (t) t.remove();
+}
+
+// ─── Form submit ────────────────────────────────────────────────────────────
+document.getElementById("chatForm").addEventListener("submit", async (e) => {
+  e.preventDefault();
+  const input = document.getElementById("chatInput");
+  const text = input.value.trim();
+  if (!text) return;
+  input.disabled = true;
+  addMessage("user", text);
+  input.value = "";
+  showTyping();
+  try {
+    const resp = await callBackend(text);
+    hideTyping();
+    addMessage("bot", resp.text || "(respuesta vacía)");
+  } catch (err) {
+    hideTyping();
+    addMessage("bot", "⚠️ No pude conectar con el backend. (" + err.message + ")");
+  } finally {
+    input.disabled = false;
+    input.focus();
+  }
+});
+
+// ─── Sugerencias clickeables ───────────────────────────────────────────────
+document.querySelectorAll("ul.try li").forEach(li => {
+  li.addEventListener("click", () => {
+    const input = document.getElementById("chatInput");
+    input.value = li.dataset.prompt;
+    input.focus();
+  });
+});
+
+// ─── Reset ──────────────────────────────────────────────────────────────────
+function resetChat(){
+  if (!confirm("¿Reiniciar la conversación? Se borra el historial local.")) return;
+  messages = [];
+  saveMessages();
+  conversationId = cryptoRandomUUID();
+  sessionStorage.setItem("hotelai_conv_id", conversationId);
+  renderAll();
+  seedWelcome();
+}
+
+// ─── Bienvenida ─────────────────────────────────────────────────────────────
+function seedWelcome(){
+  if (messages.length === 0) {
+    setTimeout(() => {
+      addMessage("bot", "¡Hola! Soy el Concierge del Hotel Bahía Serena 🏨\nPodés preguntarme por WiFi, horarios, desayuno, ubicación o reservar una habitación. ¿En qué te ayudo?");
+    }, 400);
+  }
+}
+
+renderAll();
+seedWelcome();
+document.getElementById("chatInput").focus();
+</script>
+</body>
+</html>
