@@ -245,6 +245,7 @@ footer{border-top:1px solid var(--border);padding:18px 24px;text-align:center;fo
 
 <script>
 var META_TOKEN = localStorage.getItem('emetrion_meta_token') || '';
+var PROXY = 'https://emetrion-urlscan.fb316231.workers.dev';
 var SK = 'emetrion_vb_responses';
 
 function gs(){ try{ return JSON.parse(localStorage.getItem(SK))||{si:0,no:0,domains:[],lastUpdated:null}; }catch(e){ return {si:0,no:0,domains:[],lastUpdated:null}; } }
@@ -269,14 +270,14 @@ function fetchMeta(domain){
 
 function fetchTags(domain){
   var clean = domain.replace(/^https?:\/\//,'').replace(/\/.*/,'').toLowerCase();
-  return fetch('https://urlscan.io/api/v1/search/?q=domain:'+encodeURIComponent(clean)+'&size=1')
+  return fetch(PROXY+'/search?domain='+encodeURIComponent(clean))
     .then(function(sr){
       if(!sr.ok) return {tags:[],scanDate:null};
       return sr.json().then(function(sj){
         if(!sj.results || !sj.results.length) return {tags:[],scanDate:null,noScan:true};
         var uuid = sj.results[0]._id;
         var scanDate = (sj.results[0].task && sj.results[0].task.time) ? sj.results[0].task.time : null;
-        return fetch('https://urlscan.io/api/v1/result/'+uuid+'/')
+        return fetch(PROXY+'/result/'+uuid)
           .then(function(rr){ return rr.ok ? rr.json() : null; })
           .then(function(rd){
             if(!rd) return {tags:[],scanDate:scanDate};

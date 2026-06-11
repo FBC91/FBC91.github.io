@@ -237,6 +237,7 @@ footer{border-top:1px solid var(--border);padding:18px 24px;text-align:center;fo
 
 <script>
 const META_TOKEN = localStorage.getItem('emetrion_meta_token') || '';
+const PROXY = 'https://emetrion-urlscan.fb316231.workers.dev';
 const SK = 'emetrion_va_responses';
 
 function gs(){ try{ return JSON.parse(localStorage.getItem(SK))||{si:0,no:0,domains:[],lastUpdated:null}; }catch(e){ return {si:0,no:0,domains:[],lastUpdated:null}; } }
@@ -265,13 +266,13 @@ async function fetchMeta(domain){
 async function fetchTags(domain){
   try{
     const clean = domain.replace(/^https?:\/\//,'').replace(/\/.*/,'').toLowerCase();
-    const sr = await fetch('https://urlscan.io/api/v1/search/?q=domain:'+encodeURIComponent(clean)+'&size=1');
+    const sr = await fetch(PROXY+'/search?domain='+encodeURIComponent(clean));
     if(!sr.ok) return {tags:[],scanDate:null};
     const sj = await sr.json();
     if(!sj.results || !sj.results.length) return {tags:[],scanDate:null,noScan:true};
     const uuid = sj.results[0]._id;
     const scanDate = sj.results[0].task && sj.results[0].task.time ? sj.results[0].task.time : null;
-    const rr = await fetch('https://urlscan.io/api/v1/result/'+uuid+'/');
+    const rr = await fetch(PROXY+'/result/'+uuid);
     if(!rr.ok) return {tags:[],scanDate:scanDate};
     const rd = await rr.json();
     const found = new Set();
