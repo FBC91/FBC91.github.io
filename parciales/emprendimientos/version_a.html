@@ -399,17 +399,51 @@ async function fetchMetaAds(domain){
 
 async function detectTags(domain){
   try{
-    const url = `https://${domain.replace(/^https?:\/\//,'')}`;
-    const res = await fetch(url, {mode:'cors', signal:AbortSignal.timeout(5000)});
-    if(!res.ok) return [];
-    const html = await res.text();
-    const tags = [];
-    if(/googleadservices\.com|gtag\(|google_ads_/i.test(html)) tags.push('Google Ads tag');
-    if(/connect\.facebook\.net|fbq\(/i.test(html)) tags.push('Meta Pixel');
-    if(/google-analytics\.com|gtag\/js/i.test(html)) tags.push('Google Analytics');
-    if(/googletagmanager\.com/i.test(html)) tags.push('Google Tag Manager');
-    return tags;
-  }catch(e){ return []; }
+    const clean = domain.replace(/^https?:\/\//,'').replace(/\/.*/,'').toLowerCase();
+    // 1. Buscar escaneos existentes en URLScan.io (gratis, sin token)
+    const search = await fetch(
+      `https://urlscan.io/api/v1/search/?q=domain:${encodeURIComponent(clean)}&size=1`,
+      {signal: AbortSignal.timeout(8000)}
+    );
+    if(!search.ok) return [];
+    const { results } = await search.json();
+    if(!results || !results.length) return { tags: [], scanDate: null, noScan: true };
+
+    const uuid = results[0]._id;
+    const scanDate = results[0].task?.time || null;
+
+    // 2. Traer el resultado del escaneo
+    const res = await fetch(
+      `https://urlscan.io/api/v1/result/${uuid}/`,
+      {signal: AbortSignal.timeout(8000)}
+    );
+    if(!res.ok) return { tags: [], scanDate };
+    const data = await res.json();
+
+    const found = new Set();
+
+    // Vía Wappalyzer (tecnologías detectadas)
+    const techs = data?.meta?.processors?.wappa?.data || [];
+    techs.forEach(t => {
+      const n = (t.app || '').toLowerCase();
+      if(/facebook pixel|meta pixel/.test(n))          found.add('Meta Pixel');
+      if(/google ads|adwords/.test(n))                 found.add('Google Ads');
+      if(/google analytics/.test(n))                   found.add('Google Analytics');
+      if(/google tag manager/.test(n))                 found.add('Google Tag Manager');
+      if(/tiktok pixel|tiktok/.test(n))                found.add('TikTok Pixel');
+      if(/hotjar/.test(n))                             found.add('Hotjar');
+    });
+
+    // Vía URLs cargadas (fallback si Wappalyzer no lo detectó)
+    const urls = (data?.lists?.urls || []).join(' ');
+    if(!found.has('Meta Pixel')        && /connect\.facebook\.net|fbevents\.js/i.test(urls))  found.add('Meta Pixel');
+    if(!found.has('Google Ads')        && /googleadservices\.com|google_ads_/i.test(urls))    found.add('Google Ads');
+    if(!found.has('Google Analytics')  && /google-analytics\.com/i.test(urls))                found.add('Google Analytics');
+    if(!found.has('Google Tag Manager')&& /googletagmanager\.com/i.test(urls))                found.add('Google Tag Manager');
+    if(!found.has('TikTok Pixel')      && /analytics\.tiktok\.com/i.test(urls))               found.add('TikTok Pixel');
+
+    return { tags: [...found], scanDate };
+  }catch(e){ return { tags: [], scanDate: null }; }
 }
 
 function formatDate(d){
@@ -443,42 +477,4 @@ function renderPartA_A(metaData, tags){
       html += `</div>`;
     }
   } else {
-    html += `<div class="no-ads-msg">No detectamos anuncios activos en Meta para este dominio. Continuamos con el análisis.</div>`;
-  }
-
-  if(tags && tags.length > 0){
-    html += `<div class="tag-badges" style="margin-top:16px">`;
-    tags.forEach(t=>{ html += `<span class="tag-badge">✓ ${escHTML(t)}</span>`; });
-    html += `</div>`;
-  } else if(tags !== null){
-    html += `<div class="tag-badges" style="margin-top:16px"><span class="tag-badge tag-badge-neutral">Detección de tags no disponible (CORS)</span></div>`;
-  }
-
-  el.innerHTML = html;
-}
-
-function escHTML(s){ return s ? String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;') : ''; }
-
-function respondA(choice){
-  const store = getStore();
-  store[choice] = (store[choice]||0) + 1;
-  store.lastUpdated = new Date().toISOString();
-  saveStore(store);
-  document.getElementById('contactBtnsA').style.display='none';
-  const ty = document.getElementById('tyA');
-  ty.style.display='block';
-  if(choice==='si'){
-    document.getElementById('tyIconA').textContent='✓';
-    document.getElementById('tyIconA').style.color='var(--green)';
-    document.getElementById('tyTextA').textContent='¡Perfecto! Te contactamos en las próximas 24 horas.';
-    document.getElementById('tySubA').textContent='Revisá tu bandeja de entrada.';
-  } else {
-    document.getElementById('tyIconA').textContent='→';
-    document.getElementById('tyIconA').style.color='var(--muted)';
-    document.getElementById('tyTextA').textContent='Entendido. Podés volver cuando quieras.';
-    document.getElementById('tySubA').textContent='El diagnóstico queda disponible.';
-  }
-}
-
-document.addEventListener('DOMContentLoaded',()=>{
-  document.getElementById('domainA').addEventListener('keydown',e=>{ if(e.key=
+   
