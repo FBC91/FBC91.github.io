@@ -4,474 +4,407 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Emetrion — Diagnóstico Técnico IVT</title>
-<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,300;0,9..144,400;0,9..144,600;0,9..144,700;1,9..144,400&family=DM+Sans:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,400;0,9..144,600;0,9..144,700;1,9..144,400&family=DM+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
 <style>
-:root{
-  --bg:#0f0f0f;--surface:#1a1a1a;--surface2:#212121;--border:#2a2a2a;
-  --accent:#e86c3a;--accent-light:rgba(232,108,58,0.12);--accent-border:rgba(232,108,58,0.28);
-  --text:#f0ede8;--muted:#7a7570;--muted2:#5a5550;
-  --green:#4caf7d;--green-light:rgba(76,175,125,0.12);--green-border:rgba(76,175,125,0.28);
-  --red:#e86c3a;--white:#ffffff;
-}
+:root{--bg:#0f0f0f;--surface:#1a1a1a;--border:#2a2a2a;--accent:#e86c3a;--al:rgba(232,108,58,.12);--ab:rgba(232,108,58,.28);--text:#f0ede8;--muted:#7a7570;--muted2:#5a5550;--green:#4caf7d;--gl:rgba(76,175,125,.12);--gb:rgba(76,175,125,.28);--white:#fff}
 *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
-html{scroll-behavior:smooth}
 body{background:var(--bg);color:var(--text);font-family:'DM Sans',sans-serif;min-height:100vh;line-height:1.6;-webkit-font-smoothing:antialiased}
-
-/* NAV */
-nav{position:sticky;top:0;z-index:200;background:rgba(15,15,15,0.94);backdrop-filter:blur(16px);-webkit-backdrop-filter:blur(16px);border-bottom:1px solid var(--border);padding:0 32px;height:58px;display:flex;align-items:center;justify-content:space-between}
-.nav-logo{font-family:'Fraunces',serif;font-size:21px;font-weight:700;color:var(--white);letter-spacing:-0.5px}
-.nav-logo span{color:var(--accent)}
-.nav-badge{background:rgba(42,42,42,0.8);border:1px solid var(--border);border-radius:20px;padding:4px 13px;font-size:11px;font-weight:500;color:var(--muted);letter-spacing:0.4px}
-
-/* LAYOUT */
+nav{position:sticky;top:0;z-index:200;background:rgba(15,15,15,.94);backdrop-filter:blur(16px);border-bottom:1px solid var(--border);padding:0 32px;height:58px;display:flex;align-items:center;justify-content:space-between}
+.logo{font-family:'Fraunces',serif;font-size:21px;font-weight:700;color:var(--white);letter-spacing:-.5px}
+.logo span{color:var(--accent)}
+.nbadge{background:rgba(42,42,42,.8);border:1px solid var(--border);border-radius:20px;padding:4px 13px;font-size:11px;font-weight:500;color:var(--muted)}
 .container{max-width:880px;margin:0 auto;padding:0 24px}
-
-/* STEPS */
-.step{display:none}
-.step.active{display:block;animation:fadeUp .45s ease forwards}
-@keyframes fadeUp{from{opacity:0;transform:translateY(18px)}to{opacity:1;transform:translateY(0)}}
-
-/* ── STEP 1 ── */
+.step{display:none}.step.active{display:block;animation:fu .45s ease forwards}
+@keyframes fu{from{opacity:0;transform:translateY(18px)}to{opacity:1;transform:translateY(0)}}
+/* HERO */
 .hero{padding:80px 0 56px;text-align:center}
-.eyebrow{display:inline-flex;align-items:center;gap:7px;background:var(--accent-light);border:1px solid var(--accent-border);border-radius:24px;padding:5px 15px;font-size:11.5px;font-weight:600;color:var(--accent);letter-spacing:.8px;text-transform:uppercase;margin-bottom:30px}
-.eyebrow-dot{width:6px;height:6px;background:var(--accent);border-radius:50%;animation:pulse 2s infinite}
+.eyebrow{display:inline-flex;align-items:center;gap:7px;background:var(--al);border:1px solid var(--ab);border-radius:24px;padding:5px 15px;font-size:11.5px;font-weight:600;color:var(--accent);letter-spacing:.8px;text-transform:uppercase;margin-bottom:30px}
+.edot{width:6px;height:6px;background:var(--accent);border-radius:50%;animation:pulse 2s infinite}
 @keyframes pulse{0%,100%{opacity:1}50%{opacity:.4}}
 h1{font-family:'Fraunces',serif;font-size:clamp(30px,4.8vw,50px);font-weight:700;line-height:1.14;color:var(--white);margin-bottom:18px;letter-spacing:-1.2px}
 h1 em{font-style:italic;color:var(--accent)}
-.hero-sub{font-size:16px;color:var(--muted);max-width:570px;margin:0 auto 44px;line-height:1.75;font-weight:400}
-
-/* INPUT */
-.input-wrap{max-width:500px;margin:0 auto 14px}
-.input-label{display:block;font-size:12.5px;color:var(--muted);font-weight:500;margin-bottom:10px;text-align:left;letter-spacing:.1px}
-.input-row{display:flex;background:var(--surface);border:1px solid var(--border);border-radius:13px;overflow:hidden;transition:border-color .2s,box-shadow .2s}
-.input-row:focus-within{border-color:var(--accent);box-shadow:0 0 0 3px var(--accent-light)}
-.input-prefix{display:flex;align-items:center;padding:0 14px;font-size:13px;color:var(--muted2);background:rgba(255,255,255,.025);border-right:1px solid var(--border);white-space:nowrap;flex-shrink:0}
-.domain-input{flex:1;background:transparent;border:none;outline:none;padding:14px 16px;font-size:15px;color:var(--text);font-family:'DM Sans',sans-serif}
-.domain-input::placeholder{color:var(--muted2)}
-.cta{display:block;width:100%;max-width:500px;margin:0 auto;padding:15px 28px;background:var(--accent);color:var(--white);border:none;border-radius:13px;font-family:'DM Sans',sans-serif;font-size:15px;font-weight:600;cursor:pointer;transition:all .2s;letter-spacing:.1px}
+.sub{font-size:16px;color:var(--muted);max-width:570px;margin:0 auto 44px;line-height:1.75}
+.ilabel{display:block;font-size:12.5px;color:var(--muted);font-weight:500;margin-bottom:10px;text-align:left}
+.iwrap{max-width:500px;margin:0 auto 14px}
+.irow{display:flex;background:var(--surface);border:1px solid var(--border);border-radius:13px;overflow:hidden;transition:border-color .2s,box-shadow .2s}
+.irow:focus-within{border-color:var(--accent);box-shadow:0 0 0 3px var(--al)}
+.ipfx{display:flex;align-items:center;padding:0 14px;font-size:13px;color:var(--muted2);background:rgba(255,255,255,.025);border-right:1px solid var(--border);white-space:nowrap}
+.dinput{flex:1;background:transparent;border:none;outline:none;padding:14px 16px;font-size:15px;color:var(--text);font-family:'DM Sans',sans-serif}
+.dinput::placeholder{color:var(--muted2)}
+.cta{display:block;width:100%;max-width:500px;margin:0 auto;padding:15px 28px;background:var(--accent);color:var(--white);border:none;border-radius:13px;font-family:'DM Sans',sans-serif;font-size:15px;font-weight:600;cursor:pointer;transition:all .2s}
 .cta:hover{background:#d4612f;transform:translateY(-1px);box-shadow:0 10px 28px rgba(232,108,58,.32)}
-.cta:active{transform:translateY(0)}
-
-/* TRUST */
 .trust{display:grid;grid-template-columns:repeat(3,1fr);gap:1px;background:var(--border);border:1px solid var(--border);border-radius:13px;overflow:hidden;margin-top:44px}
-.trust-item{background:var(--surface);padding:16px 18px;text-align:center;font-size:12px;color:var(--muted);line-height:1.55}
-.trust-item strong{display:block;font-size:13px;color:var(--text);font-weight:600;margin-bottom:3px}
-
-/* ── STEP 2 LOADING ── */
-.loading-wrap{padding:96px 0;text-align:center}
-.spinner-ring{width:52px;height:52px;border:3px solid var(--border);border-top-color:var(--accent);border-radius:50%;animation:spin .75s linear infinite;margin:0 auto 28px}
+.titem{background:var(--surface);padding:16px 18px;text-align:center;font-size:12px;color:var(--muted);line-height:1.55}
+.titem strong{display:block;font-size:13px;color:var(--text);font-weight:600;margin-bottom:3px}
+/* LOADING */
+.lwrap{padding:96px 0;text-align:center}
+.spinner{width:52px;height:52px;border:3px solid var(--border);border-top-color:var(--accent);border-radius:50%;animation:spin .75s linear infinite;margin:0 auto 28px}
 @keyframes spin{to{transform:rotate(360deg)}}
-.loading-messages{min-height:60px}
-.loading-msg{font-size:14.5px;color:var(--muted);font-weight:500;opacity:0;transition:opacity .35s;line-height:1.6}
-.loading-msg.visible{opacity:1}
-.loading-domain-tag{display:inline-block;font-family:'Courier New',monospace;font-size:13px;color:var(--accent);background:var(--accent-light);border:1px solid var(--accent-border);border-radius:8px;padding:4px 12px;margin-top:12px}
-
-/* ── STEP 2 DASHBOARD ── */
-.dashboard{padding:48px 0 64px}
-
-/* Section header */
-.section-header{margin-bottom:24px}
-.section-title{font-family:'Fraunces',serif;font-size:20px;font-weight:600;color:var(--white);letter-spacing:-.3px;margin-bottom:6px}
-.section-sub{font-size:13px;color:var(--muted)}
-
-/* Domain row */
-.domain-row{display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:12px;background:var(--surface);border:1px solid var(--border);border-radius:13px;padding:14px 20px;margin-bottom:32px}
-.domain-mono{font-family:'Courier New',monospace;font-size:14px;font-weight:700;color:var(--text)}
-.badge-complete{background:var(--green-light);border:1px solid var(--green-border);color:var(--green);font-size:10px;font-weight:700;letter-spacing:.8px;padding:3px 10px;border-radius:7px;text-transform:uppercase;white-space:nowrap}
-
-/* Part A */
-.part-block{background:var(--surface);border:1px solid var(--border);border-radius:16px;padding:28px;margin-bottom:20px;position:relative;overflow:hidden}
-.part-block::before{content:'';position:absolute;top:0;left:0;right:0;height:2px}
-.part-block.part-a::before{background:linear-gradient(90deg,#4c9bcf,transparent)}
-.part-block.part-b::before{background:linear-gradient(90deg,var(--accent),transparent)}
-
-.part-label{font-size:10.5px;font-weight:700;text-transform:uppercase;letter-spacing:1px;color:var(--muted);margin-bottom:18px;display:flex;align-items:center;gap:8px}
-.part-label-dot{width:6px;height:6px;border-radius:50%;flex-shrink:0}
-.part-a .part-label-dot{background:#4c9bcf}
-.part-b .part-label-dot{background:var(--accent)}
-
-/* Ads found */
-.ads-found-badge{display:inline-flex;align-items:center;gap:7px;background:var(--green-light);border:1px solid var(--green-border);color:var(--green);font-size:12px;font-weight:600;border-radius:8px;padding:5px 12px;margin-bottom:16px}
-.ads-meta-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:12px;margin-bottom:16px}
-.ads-meta-item{background:var(--bg);border:1px solid var(--border);border-radius:10px;padding:14px 16px}
-.ads-meta-label{font-size:11px;text-transform:uppercase;letter-spacing:.5px;color:var(--muted);font-weight:600;margin-bottom:5px}
-.ads-meta-value{font-size:15px;font-weight:600;color:var(--text)}
-
-/* Tag badges */
-.tag-badges{display:flex;flex-wrap:wrap;gap:8px;margin-top:14px}
-.tag-badge{display:inline-flex;align-items:center;gap:5px;background:var(--green-light);border:1px solid var(--green-border);color:var(--green);font-size:12px;font-weight:600;border-radius:8px;padding:4px 11px}
-.tag-badge-neutral{background:rgba(122,117,112,.1);border-color:rgba(122,117,112,.25);color:var(--muted)}
-
-/* Ad previews */
-.ad-previews{display:flex;flex-direction:column;gap:10px;margin-top:16px}
-.ad-preview-card{background:var(--bg);border:1px solid var(--border);border-radius:10px;padding:14px 16px}
-.ad-preview-page{font-size:11px;font-weight:700;color:var(--muted);text-transform:uppercase;letter-spacing:.5px;margin-bottom:6px}
-.ad-preview-body{font-size:13px;color:var(--text);line-height:1.55;display:-webkit-box;-webkit-line-clamp:3;-webkit-box-orient:vertical;overflow:hidden}
-.no-ads-msg{background:rgba(122,117,112,.08);border:1px solid var(--border);border-radius:10px;padding:16px 18px;font-size:13.5px;color:var(--muted);line-height:1.6}
-
-/* ROAS card */
-.roas-card{background:var(--bg);border:1px solid var(--border);border-radius:14px;padding:24px;margin-bottom:16px}
-.roas-top-label{font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.8px;color:var(--muted);margin-bottom:20px}
-.roas-compare{display:grid;grid-template-columns:1fr 40px 1fr;align-items:center;gap:12px}
-.roas-col{text-align:center}
-.roas-col-label{font-size:11px;font-weight:600;text-transform:uppercase;letter-spacing:.6px;margin-bottom:8px}
-.roas-col.rep .roas-col-label{color:var(--muted)}
-.roas-col.real .roas-col-label{color:var(--green)}
-.roas-num{font-family:'Fraunces',serif;font-size:52px;font-weight:700;line-height:1}
-.roas-col.rep .roas-num{color:var(--muted);text-decoration:line-through;text-decoration-color:var(--accent);text-decoration-thickness:2px}
-.roas-col.real .roas-num{color:var(--green)}
-.roas-x{font-size:22px;font-weight:600}
-.roas-arrow{display:flex;align-items:center;justify-content:center;font-size:18px;color:var(--green)}
-.roas-delta{text-align:center;margin-top:14px;font-size:13px;font-weight:600;color:var(--green)}
-
-/* Metrics grid */
-.metrics-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:12px;margin-bottom:14px}
-.metric-card{background:var(--bg);border:1px solid var(--border);border-radius:12px;padding:20px 18px}
-.metric-label{font-size:11px;font-weight:600;text-transform:uppercase;letter-spacing:.5px;color:var(--muted);margin-bottom:8px}
-.metric-value{font-family:'Fraunces',serif;font-size:30px;font-weight:700;line-height:1;color:var(--white)}
-.metric-value.danger{color:var(--accent)}
-.metric-value.ok{color:var(--green)}
-.metric-sub{font-size:12px;color:var(--muted);margin-top:5px}
-.metric-bar{height:3px;background:var(--border);border-radius:2px;margin-top:12px;overflow:hidden}
-.metric-bar-fill{height:100%;background:var(--accent);border-radius:2px;width:0;transition:width 1.3s cubic-bezier(.4,0,.2,1)}
-.metric-bar-fill.green{background:var(--green)}
-
-/* Mini row */
-.mini-row{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin-bottom:14px}
-.mini-card{background:var(--bg);border:1px solid var(--border);border-radius:11px;padding:16px;text-align:center}
-.mini-label{font-size:10.5px;font-weight:600;text-transform:uppercase;letter-spacing:.5px;color:var(--muted);margin-bottom:7px}
-.mini-value{font-family:'Fraunces',serif;font-size:22px;font-weight:700;color:var(--white)}
-
-/* Disclaimer */
-.disclaimer{font-size:11.5px;color:var(--muted2);line-height:1.6;padding:14px 18px;background:rgba(255,255,255,.025);border-radius:9px;border:1px solid var(--border);margin-top:6px}
-
-/* CONTACT */
-.contact-box{background:var(--surface);border:1px solid var(--border);border-radius:18px;padding:40px 36px;text-align:center;margin-top:24px}
-.contact-q{font-family:'Fraunces',serif;font-size:26px;font-weight:600;color:var(--white);margin-bottom:10px;line-height:1.28;letter-spacing:-.3px}
-.contact-sub{font-size:14px;color:var(--muted);margin-bottom:28px}
-.contact-btns{display:flex;gap:12px;justify-content:center;flex-wrap:wrap}
-.btn-yes{padding:14px 32px;background:var(--accent);color:var(--white);border:none;border-radius:12px;font-family:'DM Sans',sans-serif;font-size:15px;font-weight:600;cursor:pointer;transition:all .2s;min-width:220px}
-.btn-yes:hover{background:#d4612f;transform:translateY(-1px);box-shadow:0 8px 28px rgba(232,108,58,.3)}
-.btn-no{padding:14px 32px;background:transparent;color:var(--muted);border:1px solid var(--border);border-radius:12px;font-family:'DM Sans',sans-serif;font-size:15px;font-weight:500;cursor:pointer;transition:all .2s;min-width:180px}
-.btn-no:hover{border-color:var(--muted);color:var(--text)}
-
-/* Thankyou */
-.thankyou{display:none;padding:28px 0 8px;text-align:center}
-.ty-icon{font-size:32px;margin-bottom:10px}
-.ty-text{font-family:'Fraunces',serif;font-size:20px;font-weight:600;color:var(--white);margin-bottom:5px}
-.ty-sub{font-size:13.5px;color:var(--muted)}
-
-/* FOOTER */
-footer{border-top:1px solid var(--border);padding:18px 24px;text-align:center;font-size:10.5px;color:var(--muted2);letter-spacing:.5px;text-transform:uppercase;font-weight:500}
-
-/* RESPONSIVE */
+.lmsg{font-size:14.5px;color:var(--muted);font-weight:500;opacity:0;transition:opacity .35s;line-height:1.6;min-height:24px}
+.lmsg.vis{opacity:1}
+.ltag{display:inline-block;font-family:'Courier New',monospace;font-size:13px;color:var(--accent);background:var(--al);border:1px solid var(--ab);border-radius:8px;padding:4px 12px;margin-top:12px}
+/* DASHBOARD */
+.dash{padding:48px 0 64px}
+.sh{margin-bottom:24px}
+.stitle{font-family:'Fraunces',serif;font-size:20px;font-weight:600;color:var(--white);letter-spacing:-.3px;margin-bottom:6px}
+.ssub{font-size:13px;color:var(--muted)}
+.drow{display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:12px;background:var(--surface);border:1px solid var(--border);border-radius:13px;padding:14px 20px;margin-bottom:32px}
+.dmono{font-family:'Courier New',monospace;font-size:14px;font-weight:700;color:var(--text)}
+.cbadge{background:var(--gl);border:1px solid var(--gb);color:var(--green);font-size:10px;font-weight:700;letter-spacing:.8px;padding:3px 10px;border-radius:7px;text-transform:uppercase;white-space:nowrap}
+.pblock{background:var(--surface);border:1px solid var(--border);border-radius:16px;padding:28px;margin-bottom:20px;position:relative;overflow:hidden}
+.pblock::before{content:'';position:absolute;top:0;left:0;right:0;height:2px}
+.pa::before{background:linear-gradient(90deg,#4c9bcf,transparent)}
+.pb::before{background:linear-gradient(90deg,var(--accent),transparent)}
+.plabel{font-size:10.5px;font-weight:700;text-transform:uppercase;letter-spacing:1px;color:var(--muted);margin-bottom:18px;display:flex;align-items:center;gap:8px}
+.pdot{width:6px;height:6px;border-radius:50%;flex-shrink:0}
+.pa .pdot{background:#4c9bcf}
+.pb .pdot{background:var(--accent)}
+.afbadge{display:inline-flex;align-items:center;gap:7px;background:var(--gl);border:1px solid var(--gb);color:var(--green);font-size:12px;font-weight:600;border-radius:8px;padding:5px 12px;margin-bottom:16px}
+.amgrid{display:grid;grid-template-columns:repeat(2,1fr);gap:12px;margin-bottom:16px}
+.amitem{background:var(--bg);border:1px solid var(--border);border-radius:10px;padding:14px 16px}
+.amlabel{font-size:11px;text-transform:uppercase;letter-spacing:.5px;color:var(--muted);font-weight:600;margin-bottom:5px}
+.amval{font-size:15px;font-weight:600;color:var(--text)}
+.tbadges{display:flex;flex-wrap:wrap;gap:8px;margin-top:14px}
+.tbadge{display:inline-flex;align-items:center;gap:5px;background:var(--gl);border:1px solid var(--gb);color:var(--green);font-size:12px;font-weight:600;border-radius:8px;padding:4px 11px}
+.tbadge-n{background:rgba(122,117,112,.1);border-color:rgba(122,117,112,.25);color:var(--muted)}
+.adpreviews{display:flex;flex-direction:column;gap:10px;margin-top:16px}
+.adcard{background:var(--bg);border:1px solid var(--border);border-radius:10px;padding:14px 16px}
+.adpage{font-size:11px;font-weight:700;color:var(--muted);text-transform:uppercase;letter-spacing:.5px;margin-bottom:6px}
+.adbody{font-size:13px;color:var(--text);line-height:1.55;display:-webkit-box;-webkit-line-clamp:3;-webkit-box-orient:vertical;overflow:hidden}
+.noads{background:rgba(122,117,112,.08);border:1px solid var(--border);border-radius:10px;padding:16px 18px;font-size:13.5px;color:var(--muted);line-height:1.6}
+.rcard{background:var(--bg);border:1px solid var(--border);border-radius:14px;padding:24px;margin-bottom:16px}
+.rlabel{font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.8px;color:var(--muted);margin-bottom:20px}
+.rcmp{display:grid;grid-template-columns:1fr 40px 1fr;align-items:center;gap:12px}
+.rcol{text-align:center}
+.rclabel{font-size:11px;font-weight:600;text-transform:uppercase;letter-spacing:.6px;margin-bottom:8px}
+.rcol.rep .rclabel{color:var(--muted)}
+.rcol.real .rclabel{color:var(--green)}
+.rnum{font-family:'Fraunces',serif;font-size:52px;font-weight:700;line-height:1}
+.rcol.rep .rnum{color:var(--muted);text-decoration:line-through;text-decoration-color:var(--accent);text-decoration-thickness:2px}
+.rcol.real .rnum{color:var(--green)}
+.rx{font-size:22px}
+.rarr{display:flex;align-items:center;justify-content:center;font-size:18px;color:var(--green)}
+.rdelta{text-align:center;margin-top:14px;font-size:13px;font-weight:600;color:var(--green)}
+.mgrid{display:grid;grid-template-columns:repeat(2,1fr);gap:12px;margin-bottom:14px}
+.mc{background:var(--bg);border:1px solid var(--border);border-radius:12px;padding:20px 18px}
+.mlabel{font-size:11px;font-weight:600;text-transform:uppercase;letter-spacing:.5px;color:var(--muted);margin-bottom:8px}
+.mval{font-family:'Fraunces',serif;font-size:30px;font-weight:700;line-height:1;color:var(--white)}
+.mval.d{color:var(--accent)}
+.msub{font-size:12px;color:var(--muted);margin-top:5px}
+.mbar{height:3px;background:var(--border);border-radius:2px;margin-top:12px;overflow:hidden}
+.mbf{height:100%;background:var(--accent);border-radius:2px;width:0;transition:width 1.3s cubic-bezier(.4,0,.2,1)}
+.mrow{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin-bottom:14px}
+.mini{background:var(--bg);border:1px solid var(--border);border-radius:11px;padding:16px;text-align:center}
+.minilabel{font-size:10.5px;font-weight:600;text-transform:uppercase;letter-spacing:.5px;color:var(--muted);margin-bottom:7px}
+.minival{font-family:'Fraunces',serif;font-size:22px;font-weight:700;color:var(--white)}
+.disc{font-size:11.5px;color:var(--muted2);line-height:1.6;padding:14px 18px;background:rgba(255,255,255,.025);border-radius:9px;border:1px solid var(--border);margin-top:6px}
+.cbox{background:var(--surface);border:1px solid var(--border);border-radius:18px;padding:40px 36px;text-align:center;margin-top:24px}
+.cq{font-family:'Fraunces',serif;font-size:26px;font-weight:600;color:var(--white);margin-bottom:10px;line-height:1.28;letter-spacing:-.3px}
+.csub{font-size:14px;color:var(--muted);margin-bottom:28px}
+.cbtns{display:flex;gap:12px;justify-content:center;flex-wrap:wrap}
+.byes{padding:14px 32px;background:var(--accent);color:var(--white);border:none;border-radius:12px;font-family:'DM Sans',sans-serif;font-size:15px;font-weight:600;cursor:pointer;transition:all .2s;min-width:220px}
+.byes:hover{background:#d4612f;transform:translateY(-1px);box-shadow:0 8px 28px rgba(232,108,58,.3)}
+.bno{padding:14px 32px;background:transparent;color:var(--muted);border:1px solid var(--border);border-radius:12px;font-family:'DM Sans',sans-serif;font-size:15px;font-weight:500;cursor:pointer;transition:all .2s;min-width:180px}
+.bno:hover{border-color:var(--muted);color:var(--text)}
+.ty{display:none;padding:28px 0 8px;text-align:center}
+.tyicon{font-size:32px;margin-bottom:10px}
+.tytext{font-family:'Fraunces',serif;font-size:20px;font-weight:600;color:var(--white);margin-bottom:5px}
+.tysub{font-size:13.5px;color:var(--muted)}
+footer{border-top:1px solid var(--border);padding:18px 24px;text-align:center;font-size:10.5px;color:var(--muted2);letter-spacing:.5px;text-transform:uppercase}
 @media(max-width:640px){
   nav{padding:0 16px}
   .hero{padding:48px 0 36px}
   .trust{grid-template-columns:1fr}
-  .ads-meta-grid{grid-template-columns:1fr}
-  .roas-compare{grid-template-columns:1fr 32px 1fr}
-  .roas-num{font-size:38px}
-  .metrics-grid{grid-template-columns:1fr}
-  .mini-row{grid-template-columns:1fr}
-  .contact-box{padding:28px 20px}
-  .contact-btns{flex-direction:column;align-items:center}
-  .btn-yes,.btn-no{min-width:100%;width:100%}
-  .domain-row{flex-direction:column;align-items:flex-start}
+  .amgrid,.mgrid{grid-template-columns:1fr}
+  .rcmp{grid-template-columns:1fr 32px 1fr}
+  .rnum{font-size:38px}
+  .mrow{grid-template-columns:1fr}
+  .cbox{padding:28px 20px}
+  .cbtns{flex-direction:column;align-items:center}
+  .byes,.bno{min-width:100%;width:100%}
+  .drow{flex-direction:column;align-items:flex-start}
 }
 </style>
 </head>
 <body>
-
 <nav>
-  <div class="nav-logo">Eme<span>tri</span>on</div>
-  <div class="nav-badge">Versión A — Diagnóstico Técnico</div>
+  <div class="logo">Eme<span>tri</span>on</div>
+  <div class="nbadge">Versión A — Diagnóstico Técnico</div>
 </nav>
 
 <!-- STEP 1 -->
-<div class="step active" id="step1">
-  <div class="container">
-    <div class="hero">
-      <div class="eyebrow"><span class="eyebrow-dot"></span>Motor de detección IVT · ML multicapa</div>
-      <h1>Detectamos y bloqueamos <em>tráfico inválido</em>, bots y click fraud en tus campañas</h1>
-      <p class="hero-sub">Motor de detección multicapa con análisis de comportamiento, fingerprinting de dispositivos y correlación de señales IP para Google Ads y Meta Ads.</p>
-
-      <div class="input-wrap">
-        <label class="input-label" for="domainA">Ingresá el dominio de tu sitio para ejecutar el diagnóstico</label>
-        <div class="input-row">
-          <span class="input-prefix">https://</span>
-          <input type="text" id="domainA" class="domain-input" placeholder="tuempresa.com" autocomplete="off" spellcheck="false">
-        </div>
-      </div>
-      <button class="cta" onclick="runDiagnosticA()">Ejecutar diagnóstico gratuito →</button>
-
-      <div class="trust">
-        <div class="trust-item"><strong>20.64%</strong>del tráfico web global es inválido (Fraudlogix, 2025)</div>
-        <div class="trust-item"><strong>USD 72B</strong>en pérdidas por fraude publicitario (ANA, 2025)</div>
-        <div class="trust-item"><strong>&lt; 15ms</strong>detección por evento en tiempo real</div>
-      </div>
+<div class="step active" id="s1">
+<div class="container">
+<div class="hero">
+  <div class="eyebrow"><span class="edot"></span>Motor de detección IVT · ML multicapa</div>
+  <h1>Detectamos y bloqueamos <em>tráfico inválido</em>, bots y click fraud en tus campañas</h1>
+  <p class="sub">Motor de detección multicapa con análisis de comportamiento, fingerprinting de dispositivos y correlación de señales IP para Google Ads y Meta Ads.</p>
+  <div class="iwrap">
+    <label class="ilabel" for="dinA">Ingresá el dominio de tu sitio para ejecutar el diagnóstico</label>
+    <div class="irow">
+      <span class="ipfx">https://</span>
+      <input type="text" id="dinA" class="dinput" placeholder="tuempresa.com" autocomplete="off" spellcheck="false">
     </div>
   </div>
+  <button class="cta" id="ctaA">Ejecutar diagnóstico gratuito →</button>
+  <div class="trust">
+    <div class="titem"><strong>20.64%</strong>del tráfico web global es inválido (Fraudlogix, 2025)</div>
+    <div class="titem"><strong>USD 72B</strong>en pérdidas por fraude publicitario (ANA, 2025)</div>
+    <div class="titem"><strong>&lt;15ms</strong>detección por evento en tiempo real</div>
+  </div>
+</div>
+</div>
 </div>
 
 <!-- STEP 2 -->
-<div class="step" id="step2">
-  <div class="container">
+<div class="step" id="s2">
+<div class="container">
 
-    <!-- Loading -->
-    <div class="loading-wrap" id="loadingA">
-      <div class="spinner-ring"></div>
-      <div class="loading-messages" id="loadingMsgsA">
-        <div class="loading-msg" id="lmA0">Buscando anuncios activos en Meta Ad Library...</div>
-        <div class="loading-msg" id="lmA1">Detectando tecnologías publicitarias instaladas...</div>
-        <div class="loading-msg" id="lmA2">Calculando impacto estimado de tráfico inválido...</div>
-      </div>
-      <div class="loading-domain-tag" id="loadTagA"></div>
+  <!-- Loading -->
+  <div class="lwrap" id="lwA">
+    <div class="spinner"></div>
+    <div id="lm0A" class="lmsg">Buscando anuncios activos en Meta Ad Library...</div>
+    <div id="lm1A" class="lmsg">Detectando tecnologías publicitarias instaladas...</div>
+    <div id="lm2A" class="lmsg">Calculando impacto estimado de tráfico inválido...</div>
+    <div class="ltag" id="ltagA"></div>
+  </div>
+
+  <!-- Dashboard -->
+  <div class="dash" id="dbA" style="display:none">
+
+    <div class="drow">
+      <div class="dmono" id="ddA"></div>
+      <div class="cbadge">✓ ANÁLISIS COMPLETADO</div>
     </div>
 
-    <!-- Dashboard -->
-    <div class="dashboard" id="dashboardA" style="display:none">
+    <!-- Part A -->
+    <div class="sh">
+      <div class="stitle">Análisis de presencia publicitaria — datos públicos</div>
+      <div class="ssub">Fuentes: Meta Ad Library · URLScan.io</div>
+    </div>
+    <div class="pblock pa">
+      <div class="plabel"><span class="pdot"></span>Parte A — Datos en tiempo real</div>
+      <div id="paA"></div>
+    </div>
 
-      <!-- Domain row -->
-      <div class="domain-row">
-        <div class="domain-mono" id="domainDisplayA"></div>
-        <div class="badge-complete">✓ ANÁLISIS COMPLETADO</div>
-      </div>
-
-      <!-- PART A: Real data -->
-      <div class="section-header">
-        <div class="section-title">Análisis de presencia publicitaria — datos públicos</div>
-        <div class="section-sub">Fuentes: Meta Ad Library (datos públicos) · Detección de tags</div>
-      </div>
-      <div class="part-block part-a">
-        <div class="part-label"><span class="part-label-dot"></span>Parte A — Datos en tiempo real</div>
-        <div id="partAContentA"></div>
-      </div>
-
-      <!-- PART B: Simulated -->
-      <div class="section-header" style="margin-top:32px">
-        <div class="section-title">Resultados del análisis de IVT — estimación basada en promedios de industria</div>
-        <div class="section-sub">Benchmarks: Fraudlogix 2025 · ANA 2025</div>
-      </div>
-      <div class="part-block part-b">
-        <div class="part-label"><span class="part-label-dot"></span>Parte B — Impacto estimado</div>
-
-        <div class="roas-card">
-          <div class="roas-top-label">Comparación de ROAS — Reportado vs. Real estimado</div>
-          <div class="roas-compare">
-            <div class="roas-col rep">
-              <div class="roas-col-label">ROAS reportado</div>
-              <div class="roas-num">3.2<span class="roas-x">×</span></div>
-            </div>
-            <div class="roas-arrow">→</div>
-            <div class="roas-col real">
-              <div class="roas-col-label">ROAS real est.</div>
-              <div class="roas-num">4.1<span class="roas-x">×</span></div>
-            </div>
-          </div>
-          <div class="roas-delta">+28% de rendimiento real oculto por IVT</div>
+    <!-- Part B -->
+    <div class="sh" style="margin-top:32px">
+      <div class="stitle">Resultados del análisis de IVT — estimación basada en promedios de industria</div>
+      <div class="ssub">Benchmarks: Fraudlogix 2025 · ANA 2025</div>
+    </div>
+    <div class="pblock pb">
+      <div class="plabel"><span class="pdot"></span>Parte B — Impacto estimado</div>
+      <div class="rcard">
+        <div class="rlabel">Comparación de ROAS — Reportado vs. Real estimado</div>
+        <div class="rcmp">
+          <div class="rcol rep"><div class="rclabel">ROAS reportado</div><div class="rnum">3.2<span class="rx">×</span></div></div>
+          <div class="rarr">→</div>
+          <div class="rcol real"><div class="rclabel">ROAS real est.</div><div class="rnum">4.1<span class="rx">×</span></div></div>
         </div>
-
-        <div class="metrics-grid">
-          <div class="metric-card">
-            <div class="metric-label">Tráfico inválido estimado</div>
-            <div class="metric-value danger">23.4%</div>
-            <div class="metric-sub">del total analizado</div>
-            <div class="metric-bar"><div class="metric-bar-fill" data-w="23.4"></div></div>
-          </div>
-          <div class="metric-card">
-            <div class="metric-label">Presupuesto perdido este mes</div>
-            <div class="metric-value danger">USD 2.847</div>
-            <div class="metric-sub">estimado por IVT</div>
-            <div class="metric-bar"><div class="metric-bar-fill" data-w="23.4"></div></div>
-          </div>
-        </div>
-
-        <div class="mini-row">
-          <div class="mini-card">
-            <div class="mini-label">Clics analizados</div>
-            <div class="mini-value">48.291</div>
-          </div>
-          <div class="mini-card">
-            <div class="mini-label">Clics inválidos</div>
-            <div class="mini-value" style="color:var(--accent)">11.284</div>
-          </div>
-          <div class="mini-card">
-            <div class="mini-label">IPs sospechosas</div>
-            <div class="mini-value" style="color:var(--green)">847</div>
-          </div>
-        </div>
-
-        <div class="disclaimer">* Estimaciones basadas en promedios de industria (Fraudlogix 2025, ANA 2025). Los datos de Meta Ad Library son públicos.</div>
+        <div class="rdelta">+28% de rendimiento real oculto por IVT</div>
       </div>
-
-      <!-- CONTACT -->
-      <div class="contact-box">
-        <div class="contact-q">¿Querés que te contactemos para proteger tu presupuesto?</div>
-        <div class="contact-sub">Sin compromiso · Respuesta en menos de 24 horas</div>
-        <div class="contact-btns" id="contactBtnsA">
-          <button class="btn-yes" onclick="respondA('si')">Sí, quiero que me contacten</button>
-          <button class="btn-no" onclick="respondA('no')">No, por ahora no</button>
-        </div>
-        <div class="thankyou" id="tyA">
-          <div class="ty-icon" id="tyIconA"></div>
-          <div class="ty-text" id="tyTextA"></div>
-          <div class="ty-sub" id="tySubA"></div>
-        </div>
+      <div class="mgrid">
+        <div class="mc"><div class="mlabel">Tráfico inválido estimado</div><div class="mval d">23.4%</div><div class="msub">del total analizado</div><div class="mbar"><div class="mbf" data-w="23.4"></div></div></div>
+        <div class="mc"><div class="mlabel">Presupuesto perdido este mes</div><div class="mval d">USD 2.847</div><div class="msub">estimado por IVT</div><div class="mbar"><div class="mbf" data-w="23.4"></div></div></div>
       </div>
+      <div class="mrow">
+        <div class="mini"><div class="minilabel">Clics analizados</div><div class="minival">48.291</div></div>
+        <div class="mini"><div class="minilabel">Clics inválidos</div><div class="minival" style="color:var(--accent)">11.284</div></div>
+        <div class="mini"><div class="minilabel">IPs sospechosas</div><div class="minival" style="color:var(--green)">847</div></div>
+      </div>
+      <div class="disc">* Estimaciones basadas en promedios de industria (Fraudlogix 2025, ANA 2025). Los datos de Meta Ad Library son públicos.</div>
+    </div>
 
-    </div><!-- /dashboard -->
+    <div class="cbox">
+      <div class="cq">¿Querés que te contactemos para proteger tu presupuesto?</div>
+      <div class="csub">Sin compromiso · Respuesta en menos de 24 horas</div>
+      <div class="cbtns" id="cbA">
+        <button class="byes" onclick="respondA('si')">Sí, quiero que me contacten</button>
+        <button class="bno" onclick="respondA('no')">No, por ahora no</button>
+      </div>
+      <div class="ty" id="tyA">
+        <div class="tyicon" id="tyiA"></div>
+        <div class="tytext" id="tytA"></div>
+        <div class="tysub" id="tysA"></div>
+      </div>
+    </div>
+
   </div>
-</div><!-- /step2 -->
+</div>
+</div>
 
 <footer>VERSIÓN A — DIAGNÓSTICO TÉCNICO &nbsp;·&nbsp; Emetrion © 2025</footer>
 
 <script>
-// Token leído desde admin.html — no editar este archivo
 const META_TOKEN = localStorage.getItem('emetrion_meta_token') || '';
-const STORAGE_KEY = 'emetrion_va_responses';
+const SK = 'emetrion_va_responses';
 
-function getStore(){
-  try{ return JSON.parse(localStorage.getItem(STORAGE_KEY))||{si:0,no:0,domains:[],lastUpdated:null}; }
-  catch(e){ return {si:0,no:0,domains:[],lastUpdated:null}; }
-}
-function saveStore(d){ try{ localStorage.setItem(STORAGE_KEY,JSON.stringify(d)); }catch(e){} }
+function gs(){ try{ return JSON.parse(localStorage.getItem(SK))||{si:0,no:0,domains:[],lastUpdated:null}; }catch(e){ return {si:0,no:0,domains:[],lastUpdated:null}; } }
+function ss(d){ try{ localStorage.setItem(SK,JSON.stringify(d)); }catch(e){} }
 
-let _domain = '';
+function esc(s){ return s ? String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;') : ''; }
 
-async function runDiagnosticA(){
-  const inp = document.getElementById('domainA');
-  const domain = inp.value.trim();
-  if(!domain){ inp.focus(); inp.style.outline='2px solid var(--accent)'; setTimeout(()=>inp.style.outline='',1200); return; }
-  _domain = domain;
-  const store = getStore();
-  store.domains.push(domain);
-  saveStore(store);
-
-  document.getElementById('step1').classList.remove('active');
-  const s2 = document.getElementById('step2');
-  s2.classList.add('active');
-  document.getElementById('loadTagA').textContent = domain;
-
-  // Sequential loading messages
-  const msgs = ['lmA0','lmA1','lmA2'];
-  const delays = [0, 800, 1600];
-  msgs.forEach((id,i)=>{
-    setTimeout(()=>{
-      msgs.forEach(m=>document.getElementById(m).classList.remove('visible'));
-      document.getElementById(id).classList.add('visible');
-    }, delays[i]);
-  });
-
-  // Run real fetches in parallel
-  const [metaData, tagData] = await Promise.all([
-    fetchMetaAds(domain),
-    detectTags(domain)
-  ]);
-
-  // Wait until 2.5s total
-  await new Promise(r=>setTimeout(r, 2500));
-
-  document.getElementById('loadingA').style.display='none';
-  const dash = document.getElementById('dashboardA');
-  dash.style.display='block';
-  dash.style.animation='fadeUp .45s ease forwards';
-  document.getElementById('domainDisplayA').textContent = domain;
-
-  renderPartA_A(metaData, tagData);
-
-  setTimeout(()=>{
-    document.querySelectorAll('.metric-bar-fill').forEach(b=>{ b.style.width = b.dataset.w+'%'; });
-  }, 300);
+function fmtDate(d){
+  if(!d) return '—';
+  try{ return new Date(d).toLocaleDateString('es-AR',{day:'2-digit',month:'long',year:'numeric'}); }
+  catch(e){ return d; }
 }
 
-async function fetchMetaAds(domain){
+async function fetchMeta(domain){
   if(!META_TOKEN) return null;
   try{
-    const base = domain.replace(/^https?:\/\//,'').replace(/\//,'').split('.')[0];
-    const url = `https://graph.facebook.com/v19.0/ads_archive?search_terms=${encodeURIComponent(base)}&search_type=KEYWORD_UNORDERED&ad_reached_countries=["UY","AR","MX"]&limit=10&fields=id,ad_creative_body,ad_snapshot_url,page_name,impressions,spend,ad_delivery_start_time&access_token=${META_TOKEN}`;
-    const res = await fetch(url);
-    if(!res.ok) return null;
-    const json = await res.json();
-    return json.data && json.data.length > 0 ? json.data : null;
+    const base = domain.replace(/^https?:\/\//,'').replace(/\/.*/,'').split('.')[0];
+    const url = 'https://graph.facebook.com/v19.0/ads_archive?search_terms='+encodeURIComponent(base)+'&search_type=KEYWORD_UNORDERED&ad_reached_countries=["UY","AR","MX"]&limit=10&fields=id,ad_creative_body,ad_snapshot_url,page_name,impressions,spend,ad_delivery_start_time&access_token='+META_TOKEN;
+    const r = await fetch(url);
+    if(!r.ok) return null;
+    const j = await r.json();
+    return (j.data && j.data.length) ? j.data : null;
   }catch(e){ return null; }
 }
 
-async function detectTags(domain){
+async function fetchTags(domain){
   try{
     const clean = domain.replace(/^https?:\/\//,'').replace(/\/.*/,'').toLowerCase();
-    // 1. Buscar escaneos existentes en URLScan.io (gratis, sin token)
-    const search = await fetch(
-      `https://urlscan.io/api/v1/search/?q=domain:${encodeURIComponent(clean)}&size=1`,
-      {signal: AbortSignal.timeout(8000)}
-    );
-    if(!search.ok) return { tags: [], scanDate: null };
-    const { results } = await search.json();
-    if(!results || !results.length) return { tags: [], scanDate: null, noScan: true };
-
-    const uuid = results[0]._id;
-    const scanDate = results[0].task?.time || null;
-
-    // 2. Traer el resultado del escaneo
-    const res = await fetch(
-      `https://urlscan.io/api/v1/result/${uuid}/`,
-      {signal: AbortSignal.timeout(8000)}
-    );
-    if(!res.ok) return { tags: [], scanDate };
-    const data = await res.json();
-
+    const sr = await fetch('https://urlscan.io/api/v1/search/?q=domain:'+encodeURIComponent(clean)+'&size=1');
+    if(!sr.ok) return {tags:[],scanDate:null};
+    const sj = await sr.json();
+    if(!sj.results || !sj.results.length) return {tags:[],scanDate:null,noScan:true};
+    const uuid = sj.results[0]._id;
+    const scanDate = sj.results[0].task && sj.results[0].task.time ? sj.results[0].task.time : null;
+    const rr = await fetch('https://urlscan.io/api/v1/result/'+uuid+'/');
+    if(!rr.ok) return {tags:[],scanDate:scanDate};
+    const rd = await rr.json();
     const found = new Set();
-
-    // Vía Wappalyzer (tecnologías detectadas)
-    const techs = data?.meta?.processors?.wappa?.data || [];
-    techs.forEach(t => {
-      const n = (t.app || '').toLowerCase();
-      if(/facebook pixel|meta pixel/.test(n))          found.add('Meta Pixel');
-      if(/google ads|adwords/.test(n))                 found.add('Google Ads');
-      if(/google analytics/.test(n))                   found.add('Google Analytics');
-      if(/google tag manager/.test(n))                 found.add('Google Tag Manager');
-      if(/tiktok pixel|tiktok/.test(n))                found.add('TikTok Pixel');
-      if(/hotjar/.test(n))                             found.add('Hotjar');
+    const techs = (rd.meta && rd.meta.processors && rd.meta.processors.wappa && rd.meta.processors.wappa.data) ? rd.meta.processors.wappa.data : [];
+    techs.forEach(function(t){
+      var n = (t.app||'').toLowerCase();
+      if(/facebook pixel|meta pixel/.test(n)) found.add('Meta Pixel');
+      if(/google ads|adwords/.test(n))        found.add('Google Ads');
+      if(/google analytics/.test(n))          found.add('Google Analytics');
+      if(/google tag manager/.test(n))        found.add('Google Tag Manager');
+      if(/tiktok/.test(n))                    found.add('TikTok Pixel');
+      if(/hotjar/.test(n))                    found.add('Hotjar');
     });
-
-    // Vía URLs cargadas (fallback si Wappalyzer no lo detectó)
-    const urls = (data?.lists?.urls || []).join(' ');
-    if(!found.has('Meta Pixel')        && /connect\.facebook\.net|fbevents\.js/i.test(urls))  found.add('Meta Pixel');
-    if(!found.has('Google Ads')        && /googleadservices\.com|google_ads_/i.test(urls))    found.add('Google Ads');
-    if(!found.has('Google Analytics')  && /google-analytics\.com/i.test(urls))                found.add('Google Analytics');
-    if(!found.has('Google Tag Manager')&& /googletagmanager\.com/i.test(urls))                found.add('Google Tag Manager');
-    if(!found.has('TikTok Pixel')      && /analytics\.tiktok\.com/i.test(urls))               found.add('TikTok Pixel');
-
-    return { tags: [...found], scanDate };
-  }catch(e){ return { tags: [], scanDate: null }; }
+    var urls = ((rd.lists && rd.lists.urls) ? rd.lists.urls : []).join(' ');
+    if(!found.has('Meta Pixel')         && /connect\.facebook\.net|fbevents\.js/i.test(urls)) found.add('Meta Pixel');
+    if(!found.has('Google Ads')         && /googleadservices\.com|google_ads_/i.test(urls))   found.add('Google Ads');
+    if(!found.has('Google Analytics')   && /google-analytics\.com/i.test(urls))               found.add('Google Analytics');
+    if(!found.has('Google Tag Manager') && /googletagmanager\.com/i.test(urls))               found.add('Google Tag Manager');
+    if(!found.has('TikTok Pixel')       && /analytics\.tiktok\.com/i.test(urls))              found.add('TikTok Pixel');
+    return {tags: Array.from(found), scanDate: scanDate};
+  }catch(e){ return {tags:[],scanDate:null}; }
 }
 
-function formatDate(d){
-  if(!d) return '—';
-  try{
-    return new Date(d).toLocaleDateString('es-AR',{day:'2-digit',month:'long',year:'numeric'});
-  }catch(e){ return d; }
-}
-
-function renderPartA_A(metaData, tagData){
-  const el = document.getElementById('partAContentA');
-  let html = '';
+function renderPartA(metaData, tagResult, elId){
+  var el = document.getElementById(elId);
+  var html = '';
 
   if(metaData && metaData.length > 0){
-    const pageName = metaData[0].page_name || '—';
-    const earliest = metaData.reduce((a,b)=>(!a.ad_delivery_start_time||(b.ad_delivery_start_time&&b.ad_delivery_start_time<a.ad_delivery_start_time))?b:a, metaData[0]);
-    html += `<div class="ads-found-badge">✓ Anuncios activos detectados en Meta</div>`;
-    html += `<div class="ads-meta-grid">
-      <div class="ads-meta-item"><div class="ads-meta-label">Anuncios activos</div><div class="ads-meta-value">${metaData.length}+</div></div>
-      <div class="ads-meta-item"><div class="ads-meta-label">Página asociada</div><div class="ads-meta-value">${pageName}</div></div>
-      <div class="ads-meta-item"><div class="ads-meta-label">Corriendo anuncios desde</div><div class="ads-meta-value">${formatDate(earliest.ad_delivery_start_time)}</div></div>
-      <div class="ads-meta-item"><div class="ads-meta-label">Países detectados</div><div class="ads-meta-value">UY · AR · MX</div></div>
-    </div>`;
-    const previews = metaData.slice(0,3).filter(a=>a.ad_creative_body);
+    var pageName = metaData[0].page_name || '—';
+    var earliest = metaData.reduce(function(a,b){
+      if(!a.ad_delivery_start_time) return b;
+      if(!b.ad_delivery_start_time) return a;
+      return b.ad_delivery_start_time < a.ad_delivery_start_time ? b : a;
+    }, metaData[0]);
+    html += '<div class="afbadge">&#10003; Anuncios activos detectados en Meta</div>';
+    html += '<div class="amgrid">';
+    html += '<div class="amitem"><div class="amlabel">Anuncios activos</div><div class="amval">'+metaData.length+'+</div></div>';
+    html += '<div class="amitem"><div class="amlabel">Página asociada</div><div class="amval">'+esc(pageName)+'</div></div>';
+    html += '<div class="amitem"><div class="amlabel">Corriendo anuncios desde</div><div class="amval">'+fmtDate(earliest.ad_delivery_start_time)+'</div></div>';
+    html += '<div class="amitem"><div class="amlabel">Países</div><div class="amval">UY · AR · MX</div></div>';
+    html += '</div>';
+    var previews = metaData.slice(0,3).filter(function(a){ return a.ad_creative_body; });
     if(previews.length > 0){
-      html += `<div class="ads-meta-label" style="margin-bottom:8px">Muestra de anuncios activos</div>`;
-      html += `<div class="ad-previews">`;
-      previews.forEach(a=>{
-        html += `<div class="ad-preview-card"><div class="ad-preview-page">${a.page_name||'—'}</div><div class="ad-preview-body">${escHTML(a.ad_creative_body)}</div></div>`;
+      html += '<div class="amlabel" style="margin-bottom:8px">Muestra de anuncios activos</div><div class="adpreviews">';
+      previews.forEach(function(a){
+        html += '<div class="adcard"><div class="adpage">'+esc(a.page_name||'—')+'</div><div class="adbody">'+esc(a.ad_creative_body)+'</div></div>';
       });
-      html += `
+      html += '</div>';
+    }
+  } else {
+    html += '<div class="noads">No detectamos anuncios activos en Meta para este dominio. Continuamos con el análisis.</div>';
+  }
+
+  var tagList = tagResult.tags || [];
+  var scanDate = tagResult.scanDate || null;
+  var noScan = tagResult.noScan || false;
+  if(tagList.length > 0){
+    var dateStr = scanDate ? new Date(scanDate).toLocaleDateString('es-AR',{day:'2-digit',month:'short',year:'numeric'}) : null;
+    html += '<div style="margin-top:18px"><div class="amlabel" style="margin-bottom:8px">Tags publicitarios detectados'+(dateStr ? ' <span style="font-weight:400;color:var(--muted2)">(escaneo: '+dateStr+')</span>' : '')+'</div>';
+    html += '<div class="tbadges">';
+    tagList.forEach(function(t){ html += '<span class="tbadge">&#10003; '+esc(t)+'</span>'; });
+    html += '</div><div style="font-size:11px;color:var(--muted2);margin-top:8px">Fuente: URLScan.io</div></div>';
+  } else if(noScan){
+    html += '<div class="tbadges" style="margin-top:16px"><span class="tbadge tbadge-n">Dominio no encontrado en URLScan.io</span></div>';
+  } else {
+    html += '<div class="tbadges" style="margin-top:16px"><span class="tbadge tbadge-n">No se detectaron tags publicitarios conocidos</span></div>';
+  }
+
+  el.innerHTML = html;
+}
+
+async function runDiag(){
+  var domain = document.getElementById('dinA').value.trim();
+  if(!domain){
+    document.getElementById('dinA').style.outline = '2px solid var(--accent)';
+    setTimeout(function(){ document.getElementById('dinA').style.outline = ''; }, 1200);
+    return;
+  }
+  var store = gs();
+  store.domains.push(domain);
+  ss(store);
+
+  document.getElementById('s1').classList.remove('active');
+  document.getElementById('ltagA').textContent = domain;
+  document.getElementById('s2').classList.add('active');
+
+  var msgs = ['lm0A','lm1A','lm2A'];
+  msgs.forEach(function(id,i){
+    setTimeout(function(){
+      msgs.forEach(function(m){ document.getElementById(m).classList.remove('vis'); });
+      document.getElementById(id).classList.add('vis');
+    }, i * 800);
+  });
+
+  var results = await Promise.all([fetchMeta(domain), fetchTags(domain)]);
+  var metaData = results[0];
+  var tagResult = results[1];
+
+  await new Promise(function(r){ setTimeout(r, 2500); });
+
+  document.getElementById('lwA').style.display = 'none';
+  var db = document.getElementById('dbA');
+  db.style.display = 'block';
+  document.getElementById('ddA').textContent = domain;
+  renderPartA(metaData, tagResult, 'paA');
+
+  setTimeout(function(){
+    document.querySelectorAll('.mbf').forEach(function(b){ b.style.width = b.getAttribute('data-w') + '%'; });
+  }, 300);
+}
+
+function respondA(choice){
+  var store = gs();
+  store[choice] = (store[choice] || 0) + 1;
+  store.lastUpdated = new Date().toISOString();
+  ss(store);
+  document.getElementById('cbA').style.display = 'none';
+  document.getElementById('tyA').style.display = 'block';
+  if(choice === 'si'){
+    document.getElementById('tyiA').textContent = '✓';
+    document.getElementById('tyiA').style.color = 'var(--green)';
+    document.getElementById('tytA').textContent = '¡Perfecto! Te contactamos en las próximas 24 horas.';
+    document.getElementById('tysA').textContent = 'Revisá tu bandeja de entrada.';
+  } else {
+    document.getElementById('tyiA').textContent = '→';
+    document.getElementById('tyiA').style.color = 'var(--muted)';
+    document.getElementById('tytA').textContent = 'Entendido. Podés volver cuando quieras.';
+    document.getElementById('tysA').textContent = 'El diagnóstico queda disponible.';
+  }
+}
+
+document.getElementById('ctaA').addEventListener('click', runDiag);
+document.getElementById('dinA').addEventListener('keydown', function(e){ if(e.key === 'Enter') runDiag(); });
+</script>
+</body>
+</html>
