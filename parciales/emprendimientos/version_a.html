@@ -405,7 +405,7 @@ async function detectTags(domain){
       `https://urlscan.io/api/v1/search/?q=domain:${encodeURIComponent(clean)}&size=1`,
       {signal: AbortSignal.timeout(8000)}
     );
-    if(!search.ok) return [];
+    if(!search.ok) return { tags: [], scanDate: null };
     const { results } = await search.json();
     if(!results || !results.length) return { tags: [], scanDate: null, noScan: true };
 
@@ -453,7 +453,7 @@ function formatDate(d){
   }catch(e){ return d; }
 }
 
-function renderPartA_A(metaData, tags){
+function renderPartA_A(metaData, tagData){
   const el = document.getElementById('partAContentA');
   let html = '';
 
@@ -474,7 +474,4 @@ function renderPartA_A(metaData, tags){
       previews.forEach(a=>{
         html += `<div class="ad-preview-card"><div class="ad-preview-page">${a.page_name||'—'}</div><div class="ad-preview-body">${escHTML(a.ad_creative_body)}</div></div>`;
       });
-      html += `</div>`;
-    }
-  } else {
-   
+      html += `
