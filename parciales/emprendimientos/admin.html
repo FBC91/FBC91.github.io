@@ -1,0 +1,206 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Emetrion — Configuración</title>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:wght@600;700&family=DM+Sans:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+:root{
+  --bg:#0f0f0f;--surface:#1a1a1a;--border:#2a2a2a;
+  --accent:#e86c3a;--accent-light:rgba(232,108,58,0.12);--accent-border:rgba(232,108,58,0.28);
+  --text:#f0ede8;--muted:#7a7570;--green:#4caf7d;--green-light:rgba(76,175,125,0.12);--green-border:rgba(76,175,125,0.28);
+  --white:#fff;
+}
+*{box-sizing:border-box;margin:0;padding:0}
+body{background:var(--bg);color:var(--text);font-family:'DM Sans',sans-serif;min-height:100vh;display:flex;flex-direction:column;-webkit-font-smoothing:antialiased}
+nav{border-bottom:1px solid var(--border);padding:0 32px;height:58px;display:flex;align-items:center;justify-content:space-between}
+.nav-logo{font-family:'Fraunces',serif;font-size:21px;font-weight:700;color:var(--white);letter-spacing:-.5px}
+.nav-logo span{color:var(--accent)}
+.nav-badge{background:rgba(42,42,42,0.8);border:1px solid var(--border);border-radius:20px;padding:4px 13px;font-size:11px;color:var(--muted)}
+main{flex:1;display:flex;align-items:center;justify-content:center;padding:48px 24px}
+.card{background:var(--surface);border:1px solid var(--border);border-radius:20px;padding:40px;width:100%;max-width:560px}
+.card-title{font-family:'Fraunces',serif;font-size:24px;font-weight:700;color:var(--white);margin-bottom:6px;letter-spacing:-.3px}
+.card-sub{font-size:14px;color:var(--muted);margin-bottom:32px;line-height:1.6}
+.field{margin-bottom:20px}
+.field-label{display:block;font-size:12px;font-weight:600;text-transform:uppercase;letter-spacing:.6px;color:var(--muted);margin-bottom:8px}
+.field-input{width:100%;background:var(--bg);border:1px solid var(--border);border-radius:11px;padding:13px 16px;font-size:14px;font-family:'DM Sans',sans-serif;color:var(--text);outline:none;transition:border-color .2s,box-shadow .2s}
+.field-input:focus{border-color:var(--accent);box-shadow:0 0 0 3px var(--accent-light)}
+.field-input::placeholder{color:var(--muted)}
+.field-hint{font-size:12px;color:var(--muted);margin-top:7px;line-height:1.5}
+.field-hint a{color:var(--accent);text-decoration:none}
+.field-hint a:hover{text-decoration:underline}
+.btn-save{width:100%;padding:14px;background:var(--accent);color:var(--white);border:none;border-radius:12px;font-family:'DM Sans',sans-serif;font-size:15px;font-weight:600;cursor:pointer;transition:all .2s;margin-top:4px}
+.btn-save:hover{background:#d4612f;transform:translateY(-1px);box-shadow:0 8px 24px rgba(232,108,58,.3)}
+.btn-save:active{transform:translateY(0)}
+
+/* Status */
+.status{display:none;align-items:center;gap:10px;background:var(--green-light);border:1px solid var(--green-border);border-radius:11px;padding:13px 16px;margin-top:16px;font-size:14px;color:var(--green);font-weight:500}
+.status.error{background:var(--accent-light);border-color:var(--accent-border);color:var(--accent)}
+.status.show{display:flex}
+.status-icon{font-size:18px;flex-shrink:0}
+
+/* Current token display */
+.current-token{background:var(--bg);border:1px solid var(--border);border-radius:11px;padding:13px 16px;margin-bottom:20px;display:none}
+.current-token.show{display:block}
+.current-token-label{font-size:11px;font-weight:600;text-transform:uppercase;letter-spacing:.6px;color:var(--muted);margin-bottom:6px}
+.current-token-value{font-family:'Courier New',monospace;font-size:13px;color:var(--green);word-break:break-all}
+.clear-btn{font-size:12px;color:var(--muted);background:none;border:none;cursor:pointer;margin-top:8px;padding:0;text-decoration:underline;font-family:'DM Sans',sans-serif}
+.clear-btn:hover{color:var(--accent)}
+
+/* Links */
+.links{display:flex;gap:12px;margin-top:28px;padding-top:24px;border-top:1px solid var(--border)}
+.link-btn{flex:1;padding:11px;background:var(--bg);border:1px solid var(--border);border-radius:11px;font-family:'DM Sans',sans-serif;font-size:13px;font-weight:500;color:var(--text);cursor:pointer;text-align:center;text-decoration:none;transition:border-color .2s}
+.link-btn:hover{border-color:var(--muted)}
+
+/* Divider */
+.divider{height:1px;background:var(--border);margin:24px 0}
+.section-title{font-size:13px;font-weight:600;color:var(--muted);text-transform:uppercase;letter-spacing:.6px;margin-bottom:16px}
+
+/* Response counters */
+.counters{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.counter-card{background:var(--bg);border:1px solid var(--border);border-radius:11px;padding:16px}
+.counter-version{font-size:11px;font-weight:600;text-transform:uppercase;letter-spacing:.5px;color:var(--muted);margin-bottom:10px}
+.counter-row{display:flex;justify-content:space-between;align-items:center;font-size:13px;margin-bottom:6px}
+.counter-row:last-child{margin-bottom:0}
+.counter-label{color:var(--muted)}
+.counter-val{font-weight:600;color:var(--text)}
+.counter-val.yes{color:var(--green)}
+.counter-val.no{color:var(--muted)}
+.domains-list{font-size:11px;color:var(--muted);margin-top:8px;padding-top:8px;border-top:1px solid var(--border);line-height:1.8;word-break:break-all}
+.btn-clear-responses{width:100%;margin-top:10px;padding:9px;background:transparent;border:1px solid var(--border);border-radius:9px;font-family:'DM Sans',sans-serif;font-size:12px;color:var(--muted);cursor:pointer;transition:all .2s}
+.btn-clear-responses:hover{border-color:var(--accent);color:var(--accent)}
+
+footer{border-top:1px solid var(--border);padding:16px 24px;text-align:center;font-size:10.5px;color:var(--muted);letter-spacing:.5px;text-transform:uppercase}
+</style>
+</head>
+<body>
+<nav>
+  <div class="nav-logo">Eme<span>tri</span>on</div>
+  <div class="nav-badge">Panel de Configuración</div>
+</nav>
+
+<main>
+  <div class="card">
+    <div class="card-title">Configuración</div>
+    <div class="card-sub">Guardá tu token de Meta Ad Library acá. Las páginas lo van a leer automáticamente — no necesitás tocar ningún archivo.</div>
+
+    <!-- Current token -->
+    <div class="current-token" id="currentTokenWrap">
+      <div class="current-token-label">Token guardado</div>
+      <div class="current-token-value" id="currentTokenDisplay"></div>
+      <button class="clear-btn" onclick="clearToken()">Borrar token</button>
+    </div>
+
+    <!-- Token input -->
+    <div class="field">
+      <label class="field-label" for="tokenInput">Token de Meta Ad Library</label>
+      <input type="password" id="tokenInput" class="field-input" placeholder="EAABsbCS..." autocomplete="off" spellcheck="false">
+      <div class="field-hint">
+        Obtené el tuyo en <a href="https://developers.facebook.com/tools/explorer/" target="_blank" rel="noopener">Meta Graph API Explorer</a>. Necesitás el permiso <code>ads_read</code>.
+      </div>
+    </div>
+
+    <button class="btn-save" onclick="saveToken()">Guardar token</button>
+
+    <div class="status" id="statusMsg">
+      <span class="status-icon" id="statusIcon"></span>
+      <span id="statusText"></span>
+    </div>
+
+    <div class="divider"></div>
+
+    <!-- Response data -->
+    <div class="section-title">Respuestas registradas</div>
+    <div class="counters" id="counters"></div>
+    <button class="btn-clear-responses" onclick="clearResponses()">Borrar todas las respuestas</button>
+
+    <div class="divider"></div>
+
+    <!-- Quick links -->
+    <div class="section-title">Ir a las páginas</div>
+    <div class="links">
+      <a class="link-btn" href="version_a.html">Versión A →</a>
+      <a class="link-btn" href="version_b.html">Versión B →</a>
+    </div>
+  </div>
+</main>
+
+<footer>Emetrion © 2025 &nbsp;·&nbsp; Panel interno</footer>
+
+<script>
+const TOKEN_KEY = 'emetrion_meta_token';
+
+function saveToken(){
+  const val = document.getElementById('tokenInput').value.trim();
+  if(!val){ showStatus('error','✗','Pegá un token antes de guardar.'); return; }
+  localStorage.setItem(TOKEN_KEY, val);
+  document.getElementById('tokenInput').value = '';
+  showStatus('ok','✓','Token guardado. Las páginas ya pueden usarlo.');
+  refreshCurrentToken();
+}
+
+function clearToken(){
+  if(!confirm('¿Borrar el token guardado?')) return;
+  localStorage.removeItem(TOKEN_KEY);
+  refreshCurrentToken();
+  showStatus('ok','✓','Token borrado.');
+}
+
+function clearResponses(){
+  if(!confirm('¿Borrar todas las respuestas registradas?')) return;
+  localStorage.removeItem('emetrion_va_responses');
+  localStorage.removeItem('emetrion_vb_responses');
+  renderCounters();
+  showStatus('ok','✓','Respuestas borradas.');
+}
+
+function showStatus(type, icon, text){
+  const el = document.getElementById('statusMsg');
+  el.className = 'status show' + (type==='error' ? ' error' : '');
+  document.getElementById('statusIcon').textContent = icon;
+  document.getElementById('statusText').textContent = text;
+  setTimeout(()=>el.classList.remove('show'), 4000);
+}
+
+function refreshCurrentToken(){
+  const t = localStorage.getItem(TOKEN_KEY);
+  const wrap = document.getElementById('currentTokenWrap');
+  const disp = document.getElementById('currentTokenDisplay');
+  if(t){
+    wrap.classList.add('show');
+    disp.textContent = t.slice(0,12) + '•'.repeat(Math.max(0, t.length - 16)) + t.slice(-4);
+  } else {
+    wrap.classList.remove('show');
+  }
+}
+
+function renderCounters(){
+  const va = JSON.parse(localStorage.getItem('emetrion_va_responses')||'{"si":0,"no":0,"domains":[]}');
+  const vb = JSON.parse(localStorage.getItem('emetrion_vb_responses')||'{"si":0,"no":0,"domains":[]}');
+  const el = document.getElementById('counters');
+  el.innerHTML = ['A','B'].map((v,i)=>{
+    const d = i===0 ? va : vb;
+    const total = (d.si||0) + (d.no||0);
+    const rate = total > 0 ? Math.round((d.si||0)/total*100) : 0;
+    const domains = (d.domains||[]).slice(-5).reverse();
+    return `<div class="counter-card">
+      <div class="counter-version">Versión ${v}</div>
+      <div class="counter-row"><span class="counter-label">Sí</span><span class="counter-val yes">${d.si||0}</span></div>
+      <div class="counter-row"><span class="counter-label">No</span><span class="counter-val no">${d.no||0}</span></div>
+      <div class="counter-row"><span class="counter-label">Conversión</span><span class="counter-val">${rate}%</span></div>
+      ${domains.length ? `<div class="domains-list">Últimos dominios:<br>${domains.map(d=>`<span style="color:var(--text)">${escHTML(d)}</span>`).join('<br>')}</div>` : ''}
+    </div>`;
+  }).join('');
+}
+
+function escHTML(s){ return s ? String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;') : ''; }
+
+document.addEventListener('DOMContentLoaded', ()=>{
+  refreshCurrentToken();
+  renderCounters();
+  document.getElementById('tokenInput').addEventListener('keydown', e=>{ if(e.key==='Enter') saveToken(); });
+});
+</script>
+</body>
+</html>

@@ -327,8 +327,8 @@ footer{border-top:1px solid var(--border);padding:18px 24px;text-align:center;fo
 <footer>VERSIÓN A — DIAGNÓSTICO TÉCNICO &nbsp;·&nbsp; Emetrion © 2025</footer>
 
 <script>
-// INSERT META AD LIBRARY ACCESS TOKEN HERE
-const META_TOKEN = '';
+// Token leído desde admin.html — no editar este archivo
+const META_TOKEN = localStorage.getItem('emetrion_meta_token') || '';
 const STORAGE_KEY = 'emetrion_va_responses';
 
 function getStore(){
@@ -481,8 +481,4 @@ function respondA(choice){
 }
 
 document.addEventListener('DOMContentLoaded',()=>{
-  document.getElementById('domainA').addEventListener('keydown',e=>{ if(e.key==='Enter') runDiagnosticA(); });
-});
-</script>
-</body>
-</html>
+  document.getElementById('domainA').addEventListener('keydown',e=>{ if(e.key=

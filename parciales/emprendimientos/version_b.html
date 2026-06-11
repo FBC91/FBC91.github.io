@@ -335,8 +335,8 @@ footer{border-top:1px solid var(--border);padding:18px 24px;text-align:center;fo
 <footer>VERSIÓN B — REPORTE DE NEGOCIO &nbsp;·&nbsp; Emetrion © 2025</footer>
 
 <script>
-// INSERT META AD LIBRARY ACCESS TOKEN HERE
-const META_TOKEN = '';
+// Token leído desde admin.html — no editar este archivo
+const META_TOKEN = localStorage.getItem('emetrion_meta_token') || '';
 const STORAGE_KEY = 'emetrion_vb_responses';
 
 function getStore(){
@@ -495,8 +495,4 @@ function respondB(choice){
 }
 
 document.addEventListener('DOMContentLoaded',()=>{
-  document.getElementById('domainB').addEventListener('keydown',e=>{ if(e.key==='Enter') runDiagnosticB(); });
-});
-</script>
-</body>
-</html>
+  document.getElementById('domainB').addEventListener('keydown',e=>{ if(e.key=
