@@ -1,0 +1,737 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>HotelIA · Panel de Operaciones</title>
+<meta name="description" content="Panel de operaciones del Hotel Bahía Serena: habitaciones, disponibilidad, reservas, conversaciones y escalaciones.">
+<link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🛎️</text></svg>">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+:root{
+  --bg:#F9F6F0;
+  --bg-soft:#F2EDE4;
+  --card:#FFFFFF;
+  --ink:#1A1916;
+  --ink-soft:#5A5750;
+  --ink-faint:#8B887F;
+  --line:#E2DDD2;
+  --amber:#B8862A;
+  --amber-soft:#F5EAD4;
+  --green:#1E7E5A;
+  --green-soft:#DDF0E7;
+  --blue:#2563EB;
+  --blue-soft:#DEE9FC;
+  --orange:#C2620E;
+  --orange-soft:#FBEADA;
+  --red:#C0392B;
+  --red-soft:#F9E2DF;
+  --purple:#7C3AED;
+  --purple-soft:#ECE4FB;
+  --radius:10px;
+  --shadow:0 1px 3px rgba(26,25,22,.06), 0 4px 14px rgba(26,25,22,.05);
+}
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+html{scroll-behavior:smooth}
+body{
+  font-family:'Inter',system-ui,-apple-system,sans-serif;
+  background:var(--bg);color:var(--ink);
+  -webkit-font-smoothing:antialiased;
+  min-height:100vh;display:flex;flex-direction:column;
+}
+button{font-family:inherit}
+
+/* ─── Topbar ─── */
+.topbar{
+  background:var(--ink);color:#F9F6F0;
+  padding:.85rem 1.25rem;display:flex;align-items:center;gap:1rem;flex-wrap:wrap;
+  position:sticky;top:0;z-index:50;
+}
+.topbar .brand{display:flex;align-items:center;gap:.6rem;font-weight:600;font-size:1rem}
+.topbar .brand .logo{
+  width:34px;height:34px;border-radius:9px;display:flex;align-items:center;justify-content:center;
+  background:linear-gradient(135deg,#D4A84B,#B8862A);font-size:1.05rem;
+}
+.topbar .brand small{display:block;font-weight:400;font-size:.68rem;color:#bdb8ab;letter-spacing:.08em;text-transform:uppercase}
+.topbar .spacer{flex:1}
+.conn{display:flex;align-items:center;gap:.4rem;font-size:.75rem;color:#bdb8ab}
+.conn .dot{width:8px;height:8px;border-radius:50%;background:#ffb02e;transition:background .3s}
+.conn.online .dot{background:#27c282}
+.conn.offline .dot{background:#f15c6d}
+.top-btn{
+  background:rgba(255,255,255,.08);border:1px solid rgba(255,255,255,.15);color:#F9F6F0;
+  font-size:.75rem;padding:.45rem .8rem;border-radius:8px;cursor:pointer;
+  display:inline-flex;align-items:center;gap:.4rem;transition:background .15s;
+}
+.top-btn:hover{background:rgba(255,255,255,.16)}
+.top-btn.active{background:#D4A84B;border-color:#D4A84B;color:#1A1916;font-weight:600}
+.top-link{color:#D4A84B;font-size:.75rem;text-decoration:none;border-bottom:1px solid transparent}
+.top-link:hover{border-color:#D4A84B}
+.last-update{font-size:.68rem;color:#8B887F}
+
+/* ─── Tabs ─── */
+.tabs{
+  display:flex;gap:.25rem;padding:.75rem 1.25rem 0;background:var(--bg-soft);
+  border-bottom:1px solid var(--line);overflow-x:auto;
+}
+.tab{
+  background:none;border:none;border-bottom:2px solid transparent;
+  padding:.6rem 1rem .7rem;font-size:.85rem;color:var(--ink-soft);cursor:pointer;
+  white-space:nowrap;display:inline-flex;align-items:center;gap:.45rem;
+  transition:color .15s,border-color .15s;
+}
+.tab:hover{color:var(--ink)}
+.tab.active{color:var(--amber);border-bottom-color:var(--amber);font-weight:600}
+.tab .badge{
+  background:var(--red);color:#fff;font-size:.62rem;font-weight:700;
+  min-width:18px;height:18px;border-radius:9px;display:none;
+  align-items:center;justify-content:center;padding:0 .3rem;
+}
+.tab .badge.show{display:inline-flex}
+
+/* ─── Main ─── */
+main{flex:1;padding:1.25rem;max-width:1280px;width:100%;margin:0 auto}
+.view{display:none}
+.view.active{display:block}
+h2.section{font-size:.78rem;letter-spacing:.12em;text-transform:uppercase;color:var(--ink-faint);margin:.25rem 0 .75rem;font-weight:600}
+
+/* Estados de carga / error / vacío */
+.state-box{
+  background:var(--card);border:1px dashed var(--line);border-radius:var(--radius);
+  padding:2.25rem 1rem;text-align:center;color:var(--ink-faint);font-size:.85rem;
+}
+.state-box button{
+  margin-top:.8rem;background:var(--amber);color:#fff;border:none;border-radius:8px;
+  padding:.5rem 1.1rem;font-size:.8rem;cursor:pointer;
+}
+.state-box button:hover{filter:brightness(1.08)}
+.skeleton{position:relative;overflow:hidden;background:#EFEAE0;border-radius:var(--radius);min-height:90px}
+.skeleton::after{
+  content:"";position:absolute;inset:0;
+  background:linear-gradient(90deg,transparent,rgba(255,255,255,.55),transparent);
+  animation:shimmer 1.3s infinite;
+}
+@keyframes shimmer{0%{transform:translateX(-100%)}100%{transform:translateX(100%)}}
+
+/* ─── KPI cards ─── */
+.kpis{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:.75rem;margin-bottom:1.25rem}
+.kpi{
+  background:var(--card);border:1px solid var(--line);border-radius:var(--radius);
+  padding:.9rem 1rem;box-shadow:var(--shadow);
+}
+.kpi .label{font-size:.68rem;letter-spacing:.06em;text-transform:uppercase;color:var(--ink-faint);font-weight:600}
+.kpi .value{font-size:1.65rem;font-weight:700;margin-top:.2rem;line-height:1.1}
+.kpi .sub{font-size:.7rem;color:var(--ink-faint);margin-top:.15rem}
+.kpi.alert .value{color:var(--red)}
+.kpi.ok .value{color:var(--green)}
+
+/* ─── Rooms grid ─── */
+.legend{display:flex;flex-wrap:wrap;gap:.9rem;margin:.4rem 0 .9rem;font-size:.74rem;color:var(--ink-soft)}
+.legend span{display:inline-flex;align-items:center;gap:.35rem}
+.legend i{width:12px;height:12px;border-radius:4px;display:inline-block}
+.floor{margin-bottom:1rem}
+.floor h3{font-size:.78rem;color:var(--ink-faint);font-weight:600;margin-bottom:.45rem}
+.rooms-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(74px,1fr));gap:.45rem}
+.room{
+  border-radius:8px;padding:.45rem .3rem;text-align:center;cursor:default;
+  border:1px solid transparent;transition:transform .1s;
+  font-size:.78rem;font-weight:600;
+}
+.room small{display:block;font-size:.58rem;font-weight:500;opacity:.75;margin-top:1px;text-transform:capitalize}
+.room:hover{transform:translateY(-1px)}
+.room.available{background:var(--green-soft);color:var(--green);border-color:#BFE3D2}
+.room.pending_payment{background:var(--orange-soft);color:var(--orange);border-color:#F0D2B4}
+.room.confirmed{background:var(--blue-soft);color:var(--blue);border-color:#C3D8F7}
+.room.checked_in{background:var(--purple-soft);color:var(--purple);border-color:#D8C8F5}
+
+/* ─── Disponibilidad (heatmap) ─── */
+.tbl-wrap{background:var(--card);border:1px solid var(--line);border-radius:var(--radius);box-shadow:var(--shadow);overflow-x:auto}
+table{border-collapse:collapse;width:100%;font-size:.8rem}
+th,td{padding:.55rem .7rem;text-align:left;border-bottom:1px solid var(--line);white-space:nowrap}
+th{font-size:.66rem;letter-spacing:.07em;text-transform:uppercase;color:var(--ink-faint);background:var(--bg-soft);position:sticky;top:0}
+tr:last-child td{border-bottom:none}
+.avail-cell{text-align:center;font-weight:600;border-radius:6px}
+.avail-0{background:var(--red-soft);color:var(--red)}
+.avail-low{background:var(--orange-soft);color:var(--orange)}
+.avail-ok{background:var(--green-soft);color:var(--green)}
+.cat-name{font-weight:600}
+.cat-price{font-size:.7rem;color:var(--ink-faint)}
+.controls{display:flex;align-items:center;gap:.6rem;margin-bottom:.8rem;flex-wrap:wrap}
+.controls label{font-size:.75rem;color:var(--ink-soft)}
+.controls select,.controls input{
+  font:inherit;font-size:.78rem;padding:.4rem .6rem;border:1px solid var(--line);
+  border-radius:8px;background:#fff;color:var(--ink);
+}
+
+/* ─── Badges de estado ─── */
+.pill{font-size:.66rem;font-weight:600;padding:.22rem .55rem;border-radius:99px;display:inline-block;text-transform:capitalize}
+.pill.pending_payment{background:var(--orange-soft);color:var(--orange)}
+.pill.confirmed{background:var(--blue-soft);color:var(--blue)}
+.pill.checked_in{background:var(--purple-soft);color:var(--purple)}
+.pill.checked_out{background:#EEEBE3;color:var(--ink-faint)}
+.pill.cancelled,.pill.no_show{background:var(--red-soft);color:var(--red)}
+.pill.paid{background:var(--green-soft);color:var(--green)}
+.pill.pending{background:var(--orange-soft);color:var(--orange)}
+.pill.refunded,.pill.partial_refund{background:var(--blue-soft);color:var(--blue)}
+.pill.open{background:var(--red-soft);color:var(--red)}
+.pill.in_progress{background:var(--orange-soft);color:var(--orange)}
+.pill.resolved{background:var(--green-soft);color:var(--green)}
+.pill.critical,.pill.high{background:var(--red-soft);color:var(--red)}
+.pill.medium{background:var(--orange-soft);color:var(--orange)}
+.pill.low{background:#EEEBE3;color:var(--ink-faint)}
+.pill.active{background:var(--green-soft);color:var(--green)}
+.pill.awaiting_payment{background:var(--orange-soft);color:var(--orange)}
+.pill.escalated_human{background:var(--red-soft);color:var(--red)}
+.pill.closed{background:#EEEBE3;color:var(--ink-faint)}
+.vip{color:var(--amber);font-size:.72rem;margin-left:.25rem}
+.sla-over{color:var(--red);font-weight:700;font-size:.68rem}
+
+/* ─── Conversaciones ─── */
+.convs-layout{display:grid;grid-template-columns:340px 1fr;gap:1rem;align-items:start}
+.conv-list{
+  background:var(--card);border:1px solid var(--line);border-radius:var(--radius);
+  box-shadow:var(--shadow);overflow:hidden;max-height:640px;overflow-y:auto;
+}
+.conv-item{
+  padding:.75rem .9rem;border-bottom:1px solid var(--line);cursor:pointer;
+  transition:background .12s;
+}
+.conv-item:hover{background:var(--bg-soft)}
+.conv-item.selected{background:var(--amber-soft);border-left:3px solid var(--amber);padding-left:calc(.9rem - 3px)}
+.conv-item .row1{display:flex;justify-content:space-between;align-items:center;gap:.5rem}
+.conv-item .who{font-size:.82rem;font-weight:600;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.conv-item .when{font-size:.65rem;color:var(--ink-faint);flex-shrink:0}
+.conv-item .preview{
+  font-size:.74rem;color:var(--ink-faint);margin-top:.2rem;
+  overflow:hidden;text-overflow:ellipsis;white-space:nowrap;
+}
+.conv-item .meta{margin-top:.3rem;display:flex;gap:.35rem;flex-wrap:wrap}
+.conv-detail{
+  background:var(--card);border:1px solid var(--line);border-radius:var(--radius);
+  box-shadow:var(--shadow);display:flex;flex-direction:column;max-height:640px;min-height:320px;
+}
+.conv-detail .head{
+  padding:.8rem 1rem;border-bottom:1px solid var(--line);
+  display:flex;align-items:center;gap:.6rem;flex-wrap:wrap;
+}
+.conv-detail .head .who{font-weight:600;font-size:.9rem}
+.conv-detail .body{flex:1;overflow-y:auto;padding:1rem;background:var(--bg-soft);display:flex;flex-direction:column;gap:.45rem}
+.cmsg{display:flex}
+.cmsg.guest{justify-content:flex-start}
+.cmsg.agent{justify-content:flex-end}
+.cmsg .cb{
+  max-width:72%;padding:.5rem .7rem;border-radius:10px;font-size:.82rem;line-height:1.4;
+  white-space:pre-wrap;word-wrap:break-word;box-shadow:0 1px 2px rgba(26,25,22,.07);
+}
+.cmsg.guest .cb{background:#fff;border-top-left-radius:2px}
+.cmsg.agent .cb{background:var(--green-soft);border-top-right-radius:2px}
+.cmsg .meta{font-size:.62rem;color:var(--ink-faint);margin-top:.25rem;text-align:right}
+.detail-empty{flex:1;display:flex;align-items:center;justify-content:center;color:var(--ink-faint);font-size:.85rem;padding:2rem;text-align:center}
+
+/* ─── Footer ─── */
+footer{padding:1rem 1.25rem;text-align:center;font-size:.68rem;color:var(--ink-faint)}
+footer a{color:var(--amber);text-decoration:none}
+
+/* ─── Responsive ─── */
+@media (max-width: 900px){
+  .convs-layout{grid-template-columns:1fr}
+  .conv-detail{max-height:480px}
+}
+@media (max-width: 560px){
+  main{padding:.8rem}
+  .topbar{padding:.7rem .8rem}
+  .topbar .brand small{display:none}
+  .last-update{display:none}
+  .kpi .value{font-size:1.3rem}
+}
+@media (prefers-reduced-motion: reduce){
+  *{animation-duration:.01ms !important;transition-duration:.01ms !important}
+}
+</style>
+</head>
+<body>
+
+<header class="topbar">
+  <div class="brand">
+    <div class="logo">🛎️</div>
+    <div>
+      Hotel Bahía Serena
+      <small>Panel de operaciones · HotelIA</small>
+    </div>
+  </div>
+  <div class="spacer"></div>
+  <div class="conn" id="conn"><span class="dot"></span><span id="connText">conectando…</span></div>
+  <span class="last-update" id="lastUpdate"></span>
+  <button class="top-btn" id="refreshBtn" title="Actualizar datos ahora">↻ Actualizar</button>
+  <button class="top-btn" id="autoBtn" title="Refrescar automáticamente cada 60 segundos">⏱ Auto</button>
+  <a class="top-link" href="../">Chat del huésped →</a>
+</header>
+
+<nav class="tabs" role="tablist" aria-label="Secciones del panel">
+  <button class="tab active" data-view="today" role="tab">🏨 Hoy</button>
+  <button class="tab" data-view="availability" role="tab">📅 Disponibilidad</button>
+  <button class="tab" data-view="reservations" role="tab">🛏️ Reservas</button>
+  <button class="tab" data-view="conversations" role="tab">💬 Conversaciones</button>
+  <button class="tab" data-view="escalations" role="tab">🚨 Escalaciones <span class="badge" id="escBadge"></span></button>
+</nav>
+
+<main>
+
+  <!-- ════════ HOY ════════ -->
+  <section class="view active" id="view-today">
+    <div class="kpis" id="kpis">
+      <div class="skeleton"></div><div class="skeleton"></div><div class="skeleton"></div><div class="skeleton"></div>
+    </div>
+    <h2 class="section">Estado de habitaciones · hoy</h2>
+    <div class="legend">
+      <span><i style="background:var(--green-soft);border:1px solid #BFE3D2"></i> Libre</span>
+      <span><i style="background:var(--orange-soft);border:1px solid #F0D2B4"></i> Pago pendiente</span>
+      <span><i style="background:var(--blue-soft);border:1px solid #C3D8F7"></i> Confirmada</span>
+      <span><i style="background:var(--purple-soft);border:1px solid #D8C8F5"></i> Huésped alojado</span>
+    </div>
+    <div id="roomsArea"><div class="skeleton" style="min-height:240px"></div></div>
+  </section>
+
+  <!-- ════════ DISPONIBILIDAD ════════ -->
+  <section class="view" id="view-availability">
+    <div class="controls">
+      <label for="availDays">Horizonte:</label>
+      <select id="availDays">
+        <option value="7">7 días</option>
+        <option value="14" selected>14 días</option>
+        <option value="30">30 días</option>
+      </select>
+      <label for="availStart">Desde:</label>
+      <input type="date" id="availStart">
+    </div>
+    <div id="availArea"><div class="skeleton" style="min-height:280px"></div></div>
+  </section>
+
+  <!-- ════════ RESERVAS ════════ -->
+  <section class="view" id="view-reservations">
+    <div class="controls">
+      <label for="resStatus">Estado:</label>
+      <select id="resStatus">
+        <option value="">Activas (todas)</option>
+        <option value="pending_payment">Pago pendiente</option>
+        <option value="confirmed">Confirmadas</option>
+        <option value="checked_in">Alojados</option>
+        <option value="checked_out">Check-out</option>
+        <option value="cancelled">Canceladas</option>
+      </select>
+    </div>
+    <div id="resArea"><div class="skeleton" style="min-height:280px"></div></div>
+  </section>
+
+  <!-- ════════ CONVERSACIONES ════════ -->
+  <section class="view" id="view-conversations">
+    <div class="convs-layout">
+      <div class="conv-list" id="convList"><div class="skeleton" style="min-height:300px"></div></div>
+      <div class="conv-detail" id="convDetail">
+        <div class="detail-empty">Seleccioná una conversación para ver el historial completo del huésped con el concierge.</div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ════════ ESCALACIONES ════════ -->
+  <section class="view" id="view-escalations">
+    <div class="controls">
+      <label for="escStatus">Estado:</label>
+      <select id="escStatus">
+        <option value="">Todas</option>
+        <option value="open" selected>Abiertas</option>
+        <option value="in_progress">En curso</option>
+        <option value="resolved">Resueltas</option>
+      </select>
+    </div>
+    <div id="escArea"><div class="skeleton" style="min-height:220px"></div></div>
+  </section>
+
+</main>
+
+<footer>
+  HotelIA · Proyecto Intermedio 1 · ORT 2026 · Panel read-only (MVP) ·
+  <a href="../">ir al chat del huésped</a>
+</footer>
+
+<script>
+"use strict";
+
+// ─── Config ──────────────────────────────────────────────────────────────────
+const IS_LOCAL = ["localhost","127.0.0.1"].includes(location.hostname);
+const API = IS_LOCAL ? "" : "https://hotelai-kg75.onrender.com";
+const AUTO_REFRESH_MS = 60000;
+
+const $ = id => document.getElementById(id);
+const esc = s => String(s ?? "").replace(/[&<>"']/g, c =>
+  ({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]));
+
+const STATUS_ES = {
+  pending_payment:"Pago pendiente", confirmed:"Confirmada", checked_in:"Alojado",
+  checked_out:"Check-out", cancelled:"Cancelada", no_show:"No show",
+  paid:"Pagada", pending:"Pendiente", refunded:"Reintegrada", partial_refund:"Reintegro parcial",
+  open:"Abierta", in_progress:"En curso", resolved:"Resuelta",
+  active:"Activa", awaiting_payment:"Esperando pago", escalated_human:"Escalada", closed:"Cerrada",
+  available:"Libre",
+};
+const tStatus = s => STATUS_ES[s] || s;
+
+function fmtDate(iso){
+  if (!iso) return "—";
+  const d = new Date(iso.length === 10 ? iso + "T12:00:00" : iso);
+  return d.toLocaleDateString("es-UY",{day:"2-digit",month:"short"});
+}
+function fmtDateTime(iso){
+  if (!iso) return "—";
+  return new Date(iso).toLocaleString("es-UY",{day:"2-digit",month:"short",hour:"2-digit",minute:"2-digit"});
+}
+function timeAgo(iso){
+  if (!iso) return "";
+  const s = (Date.now() - new Date(iso).getTime())/1000;
+  if (s < 60) return "ahora";
+  if (s < 3600) return Math.floor(s/60) + " min";
+  if (s < 86400) return Math.floor(s/3600) + " h";
+  return Math.floor(s/86400) + " d";
+}
+
+// ─── Fetch con manejo de errores uniforme ────────────────────────────────────
+async function api(path){
+  const r = await fetch(API + path, {cache:"no-store"});
+  if (!r.ok) throw new Error("HTTP " + r.status);
+  return r.json();
+}
+
+function errorBox(target, msg, retryFn){
+  target.innerHTML = `
+    <div class="state-box">
+      <div>⚠️ ${esc(msg)}</div>
+      <div style="font-size:.72rem;margin-top:.35rem">Si el servidor estaba dormido (hosting gratuito), puede tardar un minuto en despertar.</div>
+      <button type="button">↻ Reintentar</button>
+    </div>`;
+  target.querySelector("button").addEventListener("click", retryFn);
+}
+function emptyBox(target, msg){
+  target.innerHTML = `<div class="state-box">${esc(msg)}</div>`;
+}
+
+// ─── Conexión ────────────────────────────────────────────────────────────────
+function setConn(state){
+  const el = $("conn"), txt = $("connText");
+  el.classList.remove("online","offline");
+  if (state === "online"){ el.classList.add("online"); txt.textContent = "conectado"; }
+  else if (state === "offline"){ el.classList.add("offline"); txt.textContent = "sin conexión"; }
+  else txt.textContent = "conectando…";
+}
+async function checkHealth(){
+  try { const r = await fetch(API + "/healthz",{cache:"no-store"}); setConn(r.ok?"online":"offline"); return r.ok; }
+  catch(e){ setConn("offline"); return false; }
+}
+function stampUpdate(){
+  $("lastUpdate").textContent = "actualizado " + new Date().toLocaleTimeString("es-UY",{hour:"2-digit",minute:"2-digit",second:"2-digit"});
+}
+
+// ─── Vista HOY ───────────────────────────────────────────────────────────────
+async function loadToday(){
+  const kpis = $("kpis"), area = $("roomsArea");
+  try {
+    const [ov, rooms] = await Promise.all([api("/api/admin/overview"), api("/api/rooms/status")]);
+    setConn("online"); stampUpdate();
+
+    const escCount = ov.escalations_open || 0;
+    const badge = $("escBadge");
+    badge.textContent = escCount;
+    badge.classList.toggle("show", escCount > 0);
+
+    kpis.innerHTML = `
+      <div class="kpi ${ov.occupancy_pct >= 90 ? "alert" : ""}">
+        <div class="label">Ocupación hoy</div>
+        <div class="value">${ov.occupancy_pct}%</div>
+        <div class="sub">${ov.rooms_occupied_today}/${ov.rooms_total} habitaciones</div>
+      </div>
+      <div class="kpi"><div class="label">Llegadas hoy</div><div class="value">${ov.arrivals_today}</div><div class="sub">check-ins esperados</div></div>
+      <div class="kpi"><div class="label">Salidas hoy</div><div class="value">${ov.departures_today}</div><div class="sub">check-outs esperados</div></div>
+      <div class="kpi ${ov.reservations_pending_payment > 0 ? "alert" : "ok"}">
+        <div class="label">Pagos pendientes</div><div class="value">${ov.reservations_pending_payment}</div><div class="sub">reservas sin pagar</div>
+      </div>
+      <div class="kpi ${escCount > 0 ? "alert" : "ok"}">
+        <div class="label">Escalaciones</div><div class="value">${escCount}</div><div class="sub">abiertas / en curso</div>
+      </div>
+      <div class="kpi"><div class="label">Conversaciones</div><div class="value">${ov.conversations_active}</div><div class="sub">activas en el chat</div></div>`;
+
+    // Agrupar habitaciones por piso
+    const byFloor = {};
+    for (const r of rooms.rooms || []) (byFloor[r.floor] ??= []).push(r);
+    const floors = Object.keys(byFloor).sort((a,b)=>a-b);
+    if (!floors.length) return emptyBox(area, "No hay habitaciones cargadas en el sistema.");
+    area.innerHTML = floors.map(f => `
+      <div class="floor">
+        <h3>Piso ${esc(f)} · ${byFloor[f].length} habitaciones</h3>
+        <div class="rooms-grid">
+          ${byFloor[f].map(r => `
+            <div class="room ${esc(r.status_today)}" title="Hab. ${esc(r.room_number)} · ${esc(r.category_id)} · ${tStatus(r.status_today)}">
+              ${esc(r.room_number)}<small>${tStatus(r.status_today)}</small>
+            </div>`).join("")}
+        </div>
+      </div>`).join("");
+  } catch(e){
+    setConn("offline");
+    kpis.innerHTML = "";
+    errorBox(area, "No pude cargar el estado del hotel. (" + e.message + ")", loadToday);
+  }
+}
+
+// ─── Vista DISPONIBILIDAD ────────────────────────────────────────────────────
+async function loadAvailability(){
+  const area = $("availArea");
+  area.innerHTML = '<div class="skeleton" style="min-height:280px"></div>';
+  const days = $("availDays").value;
+  const start = $("availStart").value;
+  let path = `/api/rooms/availability?days=${days}`;
+  if (start) path += `&start=${start}`;
+  try {
+    const data = await api(path);
+    setConn("online"); stampUpdate();
+    const cats = Object.entries(data.categories || {});
+    if (!cats.length || !(data.days||[]).length) return emptyBox(area, "Sin datos de disponibilidad para el rango elegido.");
+
+    const head = data.days.map(d => {
+      const dt = new Date(d.date + "T12:00:00");
+      const wd = dt.toLocaleDateString("es-UY",{weekday:"short"});
+      const we = [0,6].includes(dt.getDay());
+      return `<th style="text-align:center${we ? ";color:var(--amber)" : ""}">${wd}<br>${fmtDate(d.date)}</th>`;
+    }).join("");
+
+    const rows = cats.map(([catId, c]) => {
+      const cells = data.days.map(d => {
+        const n = d.by_category?.[catId] ?? 0;
+        const cls = n === 0 ? "avail-0" : (n <= Math.max(1, c.total * .2) ? "avail-low" : "avail-ok");
+        return `<td><div class="avail-cell ${cls}" title="${esc(c.display_name || catId)} · ${fmtDate(d.date)}: ${n} libres de ${c.total}">${n}</div></td>`;
+      }).join("");
+      return `<tr>
+        <td><span class="cat-name">${esc(c.display_name || catId)}</span><br>
+            <span class="cat-price">${c.total} hab. · ${c.price_usd != null ? "USD " + c.price_usd + "/noche" : "sin tarifa"}</span></td>
+        ${cells}</tr>`;
+    }).join("");
+
+    area.innerHTML = `
+      <div class="tbl-wrap"><table>
+        <thead><tr><th>Categoría</th>${head}</tr></thead>
+        <tbody>${rows}</tbody>
+      </table></div>
+      <div class="legend" style="margin-top:.7rem">
+        <span><i style="background:var(--green-soft)"></i> Buena disponibilidad</span>
+        <span><i style="background:var(--orange-soft)"></i> Quedan pocas (≤20%)</span>
+        <span><i style="background:var(--red-soft)"></i> Agotado</span>
+      </div>`;
+  } catch(e){
+    setConn("offline");
+    errorBox(area, "No pude cargar la disponibilidad. (" + e.message + ")", loadAvailability);
+  }
+}
+
+// ─── Vista RESERVAS ──────────────────────────────────────────────────────────
+async function loadReservations(){
+  const area = $("resArea");
+  area.innerHTML = '<div class="skeleton" style="min-height:280px"></div>';
+  const status = $("resStatus").value;
+  let path = "/api/admin/reservations?limit=100";
+  if (status) path += "&status=" + status;
+  try {
+    const data = await api(path);
+    setConn("online"); stampUpdate();
+    const list = data.reservations || [];
+    if (!list.length) return emptyBox(area, "No hay reservas para el filtro seleccionado.");
+    const rows = list.map(r => {
+      const g = r.guests || {};
+      const room = r.rooms || {};
+      const nights = Math.max(1, Math.round((new Date(r.check_out) - new Date(r.check_in)) / 86400000));
+      return `<tr>
+        <td><strong>${esc(g.full_name || "Sin nombre")}</strong>${g.vip_flag ? '<span class="vip" title="Huésped VIP">★ VIP</span>' : ""}
+            <br><span style="font-size:.7rem;color:var(--ink-faint)">${esc(g.email || g.phone || "sin contacto")}</span></td>
+        <td>Hab. ${esc(room.room_number || "?")}<br><span style="font-size:.7rem;color:var(--ink-faint);text-transform:capitalize">${esc(room.category_id || "")}</span></td>
+        <td>${fmtDate(r.check_in)} → ${fmtDate(r.check_out)}<br><span style="font-size:.7rem;color:var(--ink-faint)">${nights} noche${nights>1?"s":""} · ${r.n_adults} ad.${r.n_children ? " + " + r.n_children + " niñ." : ""}</span></td>
+        <td><strong>USD ${Number(r.total_amount_usd).toFixed(0)}</strong></td>
+        <td><span class="pill ${esc(r.status)}">${tStatus(r.status)}</span></td>
+        <td><span class="pill ${esc(r.payment_status)}">${tStatus(r.payment_status)}</span></td>
+      </tr>`;
+    }).join("");
+    area.innerHTML = `
+      <div class="tbl-wrap"><table>
+        <thead><tr><th>Huésped</th><th>Habitación</th><th>Fechas</th><th>Total</th><th>Estado</th><th>Pago</th></tr></thead>
+        <tbody>${rows}</tbody>
+      </table></div>
+      <p style="font-size:.7rem;color:var(--ink-faint);margin-top:.5rem">${list.length} reserva${list.length!==1?"s":""} · ordenadas por fecha de check-in</p>`;
+  } catch(e){
+    setConn("offline");
+    errorBox(area, "No pude cargar las reservas. (" + e.message + ")", loadReservations);
+  }
+}
+
+// ─── Vista CONVERSACIONES ────────────────────────────────────────────────────
+let selectedConv = null;
+
+async function loadConversations(){
+  const list = $("convList");
+  list.innerHTML = '<div class="skeleton" style="min-height:300px"></div>';
+  try {
+    const data = await api("/api/admin/conversations?limit=50");
+    setConn("online"); stampUpdate();
+    const convs = data.conversations || [];
+    if (!convs.length) return emptyBox(list, "Todavía no hay conversaciones. Cuando un huésped escriba en el chat, va a aparecer acá.");
+    list.innerHTML = convs.map(c => {
+      const g = c.guests || {};
+      const who = g.full_name || g.email || "Huésped anónimo";
+      const last = c.last_message;
+      const preview = last ? (last.direction === "outbound" ? "🤖 " : "") + last.content : "(sin mensajes)";
+      return `<div class="conv-item ${selectedConv === c.conversation_id ? "selected" : ""}" data-conv="${esc(c.conversation_id)}" role="button" tabindex="0">
+        <div class="row1">
+          <span class="who">${esc(who)}${g.vip_flag ? '<span class="vip">★</span>' : ""}</span>
+          <span class="when">${timeAgo(c.updated_at)}</span>
+        </div>
+        <div class="preview">${esc(preview)}</div>
+        <div class="meta">
+          <span class="pill ${esc(c.state)}">${tStatus(c.state)}</span>
+          ${c.last_agent ? `<span class="pill" style="background:#EEEBE3;color:var(--ink-faint)">${esc(c.last_agent)}</span>` : ""}
+        </div>
+      </div>`;
+    }).join("");
+    list.querySelectorAll(".conv-item").forEach(el => {
+      const open = () => openConversation(el.dataset.conv);
+      el.addEventListener("click", open);
+      el.addEventListener("keydown", e => { if (e.key === "Enter" || e.key === " ") { e.preventDefault(); open(); } });
+    });
+  } catch(e){
+    setConn("offline");
+    errorBox(list, "No pude cargar las conversaciones. (" + e.message + ")", loadConversations);
+  }
+}
+
+async function openConversation(convId){
+  selectedConv = convId;
+  document.querySelectorAll(".conv-item").forEach(el =>
+    el.classList.toggle("selected", el.dataset.conv === convId));
+  const det = $("convDetail");
+  det.innerHTML = '<div class="skeleton" style="min-height:300px;flex:1"></div>';
+  try {
+    const data = await api(`/api/admin/conversations/${convId}/messages`);
+    const conv = data.conversation, g = conv.guests || {};
+    const who = g.full_name || g.email || "Huésped anónimo";
+    const msgs = data.messages || [];
+    det.innerHTML = `
+      <div class="head">
+        <span class="who">${esc(who)}</span>
+        ${g.vip_flag ? '<span class="vip">★ VIP</span>' : ""}
+        <span class="pill ${esc(conv.state)}">${tStatus(conv.state)}</span>
+        <span style="font-size:.68rem;color:var(--ink-faint)">${esc(g.email || g.phone || "")} · iniciada ${fmtDateTime(conv.created_at)}</span>
+      </div>
+      <div class="body" id="convBody">
+        ${msgs.length ? msgs.map(m => `
+          <div class="cmsg ${m.direction === "inbound" ? "guest" : "agent"}">
+            <div>
+              <div class="cb">${esc(m.content)}</div>
+              <div class="meta">${m.direction === "outbound" ? "🤖 " + esc(m.agent_name || "concierge") + " · " : ""}${fmtDateTime(m.created_at)}</div>
+            </div>
+          </div>`).join("") : '<div class="detail-empty">Esta conversación no tiene mensajes.</div>'}
+      </div>`;
+    const body = $("convBody");
+    if (body) body.scrollTop = body.scrollHeight;
+  } catch(e){
+    det.innerHTML = "";
+    errorBox(det, "No pude cargar el historial. (" + e.message + ")", () => openConversation(convId));
+  }
+}
+
+// ─── Vista ESCALACIONES ──────────────────────────────────────────────────────
+async function loadEscalations(){
+  const area = $("escArea");
+  area.innerHTML = '<div class="skeleton" style="min-height:220px"></div>';
+  const status = $("escStatus").value;
+  let path = "/api/admin/escalations?limit=100";
+  if (status) path += "&status=" + status;
+  try {
+    const data = await api(path);
+    setConn("online"); stampUpdate();
+    const list = data.escalations || [];
+    if (!list.length) return emptyBox(area, "Sin escalaciones para el filtro seleccionado. 🎉 El concierge está resolviendo todo solo.");
+    const rows = list.map(e => `<tr>
+      <td>${fmtDateTime(e.created_at)}${e.sla_overdue ? '<br><span class="sla-over">⏰ SLA vencido</span>' : ""}</td>
+      <td><span class="pill ${esc(e.severity)}">${esc(e.severity)}</span></td>
+      <td><strong>${esc(e.reason_code)}</strong><br><span style="font-size:.7rem;color:var(--ink-faint)">por ${esc(e.triggered_by_agent)}</span></td>
+      <td><span class="pill ${esc(e.status)}">${tStatus(e.status)}</span></td>
+      <td>${esc(e.assigned_to || "—")}</td>
+      <td>${e.sla_due_at ? fmtDateTime(e.sla_due_at) : "—"}</td>
+      <td><button class="top-btn" style="background:var(--amber-soft);border-color:var(--amber);color:var(--amber);font-size:.68rem"
+            data-goto-conv="${esc(e.conversation_id)}">Ver chat</button></td>
+    </tr>`).join("");
+    area.innerHTML = `
+      <div class="tbl-wrap"><table>
+        <thead><tr><th>Creada</th><th>Severidad</th><th>Motivo</th><th>Estado</th><th>Asignada a</th><th>SLA</th><th></th></tr></thead>
+        <tbody>${rows}</tbody>
+      </table></div>`;
+    area.querySelectorAll("[data-goto-conv]").forEach(b =>
+      b.addEventListener("click", () => {
+        switchView("conversations");
+        loadConversations().then(() => openConversation(b.dataset.gotoConv));
+      }));
+  } catch(e){
+    setConn("offline");
+    errorBox(area, "No pude cargar las escalaciones. (" + e.message + ")", loadEscalations);
+  }
+}
+
+// ─── Tabs / navegación ───────────────────────────────────────────────────────
+const LOADERS = {
+  today: loadToday,
+  availability: loadAvailability,
+  reservations: loadReservations,
+  conversations: loadConversations,
+  escalations: loadEscalations,
+};
+const loaded = new Set();
+
+function switchView(name){
+  document.querySelectorAll(".tab").forEach(t =>
+    t.classList.toggle("active", t.dataset.view === name));
+  document.querySelectorAll(".view").forEach(v =>
+    v.classList.toggle("active", v.id === "view-" + name));
+  // Lazy load: cada vista carga la primera vez que se abre
+  if (!loaded.has(name)){ loaded.add(name); LOADERS[name](); }
+}
+document.querySelectorAll(".tab").forEach(t =>
+  t.addEventListener("click", () => switchView(t.dataset.view)));
+
+function currentView(){
+  return document.querySelector(".tab.active")?.dataset.view || "today";
+}
+
+// ─── Refresh manual + auto ───────────────────────────────────────────────────
+$("refreshBtn").addEventListener("click", () => LOADERS[currentView()]());
+
+let autoTimer = null;
+$("autoBtn").addEventListener("click", () => {
+  if (autoTimer){
+    clearInterval(autoTimer); autoTimer = null;
+    $("autoBtn").classList.remove("active");
+  } else {
+    autoTimer = setInterval(() => LOADERS[currentView()](), AUTO_REFRESH_MS);
+    $("autoBtn").classList.add("active");
+    LOADERS[currentView()]();
+  }
+});
+
+// ─── Filtros ─────────────────────────────────────────────────────────────────
+$("availDays").addEventListener("change", loadAvailability);
+$("availStart").addEventListener("change", loadAvailability);
+$("resStatus").addEventListener("change", loadReservations);
+$("escStatus").addEventListener("change", loadEscalations);
+
+// ─── Init ────────────────────────────────────────────────────────────────────
+$("availStart").min = new Date().toISOString().slice(0,10);
+checkHealth();
+setInterval(checkHealth, 45000);
+loaded.add("today");
+loadToday();
+</script>
+</body>
+</html>
