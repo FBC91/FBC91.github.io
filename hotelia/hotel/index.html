@@ -251,6 +251,20 @@ footer a{color:var(--amber);text-decoration:none}
 </style>
 </head>
 <body>
+<div id="loginOverlay" style="position:fixed;inset:0;z-index:9999;display:flex;align-items:center;justify-content:center;background:linear-gradient(180deg,#F2EDE4,#F9F6F0);font-family:'Inter',system-ui,sans-serif">
+  <form id="loginForm" style="background:#fff;border:1px solid #E5DDCC;border-radius:14px;padding:2rem 1.75rem;width:320px;max-width:90vw;box-shadow:0 10px 40px rgba(0,0,0,.12)">
+    <div style="font-size:1.8rem;text-align:center">&#128718;</div>
+    <h1 style="font-size:1.15rem;color:#1A1916;text-align:center;margin:.4rem 0 .2rem;font-weight:700">Panel de operaciones</h1>
+    <p style="font-size:.8rem;color:#6B6657;text-align:center;margin-bottom:1.1rem">Hotel Bah&iacute;a Serena &middot; HotelIA</p>
+    <label style="font-size:.72rem;color:#6B6657;display:block;margin-bottom:.2rem">Usuario</label>
+    <input id="loginUser" value="admin" autocomplete="username" style="width:100%;padding:.55rem .7rem;border:1px solid #D8D2C6;border-radius:8px;margin-bottom:.7rem;font-size:.9rem">
+    <label style="font-size:.72rem;color:#6B6657;display:block;margin-bottom:.2rem">Contrase&ntilde;a</label>
+    <input id="loginPass" type="password" value="admin" autocomplete="current-password" style="width:100%;padding:.55rem .7rem;border:1px solid #D8D2C6;border-radius:8px;margin-bottom:.5rem;font-size:.9rem">
+    <div id="loginError" style="display:none;color:#C0392B;font-size:.76rem;margin-bottom:.5rem">Usuario o contrase&ntilde;a incorrectos.</div>
+    <button type="submit" style="width:100%;padding:.6rem;background:#B8862A;color:#fff;border:none;border-radius:8px;font-size:.92rem;font-weight:600;cursor:pointer">Entrar</button>
+    <p style="font-size:.68rem;color:#9b9483;text-align:center;margin-top:.8rem">Demo &middot; acceso simulado: <b>admin</b> / <b>admin</b></p>
+  </form>
+</div>
 
 <header class="topbar">
   <div class="brand">
@@ -266,6 +280,7 @@ footer a{color:var(--amber);text-decoration:none}
   <button class="top-btn" id="refreshBtn" title="Actualizar datos ahora">↻ Actualizar</button>
   <button class="top-btn" id="autoBtn" title="Refrescar automáticamente cada 60 segundos">⏱ Auto</button>
   <a class="top-link" href="../">Chat del huésped →</a>
+  <button class="top-btn" id="logoutBtn" title="Cerrar sesión">Salir</button>
 </header>
 
 <nav class="tabs" role="tablist" aria-label="Secciones del panel">
@@ -274,6 +289,7 @@ footer a{color:var(--amber);text-decoration:none}
   <button class="tab" data-view="reservations" role="tab">🛏️ Reservas</button>
   <button class="tab" data-view="conversations" role="tab">💬 Conversaciones</button>
   <button class="tab" data-view="escalations" role="tab">🚨 Escalaciones <span class="badge" id="escBadge"></span></button>
+  <button class="tab" data-view="metrics" role="tab">📈 Métricas</button>
 </nav>
 
 <main>
@@ -348,6 +364,20 @@ footer a{color:var(--amber);text-decoration:none}
     <div id="escArea"><div class="skeleton" style="min-height:220px"></div></div>
   </section>
 
+  <!-- METRICAS -->
+  <section class="view" id="view-metrics">
+    <div class="controls">
+      <label for="metDays">Ventana:</label>
+      <select id="metDays">
+        <option value="7">7 d&iacute;as</option>
+        <option value="30" selected>30 d&iacute;as</option>
+        <option value="90">90 d&iacute;as</option>
+      </select>
+      <span style="font-size:.72rem;color:#6B6657">Eventos de uso del chat del hu&eacute;sped (anal&iacute;tica web).</span>
+    </div>
+    <div id="metricsArea"><div class="skeleton" style="min-height:200px"></div></div>
+  </section>
+
 </main>
 
 <footer>
@@ -361,6 +391,18 @@ footer a{color:var(--amber);text-decoration:none}
 // ─── Config ──────────────────────────────────────────────────────────────────
 const IS_LOCAL = ["localhost","127.0.0.1"].includes(location.hostname);
 const API = IS_LOCAL ? "" : "https://hotelai-kg75.onrender.com";
+
+/* === Analitica del panel (page_view) + clave publica Supabase === */
+const SB_URL = "https://myebxfostbafuogfymqa.supabase.co";
+const SB_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Im15ZWJ4Zm9zdGJhZnVvZ2Z5bXFhIiwicm9sZSI6ImFub24iLCJpYXQiOjE3Nzk4MjAyMjAsImV4cCI6MjA5NTM5NjIyMH0.ZkIJvOa_bvRX3hlwKWyEuy3CI2hOxEYau2ojbCQacJY";
+const PANEL_ANALYTICS = (function(){
+  let sid = sessionStorage.getItem("hotelai_sid");
+  if(!sid){ sid=(window.crypto&&crypto.randomUUID)?crypto.randomUUID():(Date.now()+"-"+Math.random().toString(16).slice(2)); sessionStorage.setItem("hotelai_sid",sid); }
+  const device=(window.matchMedia&&matchMedia("(max-width:640px)").matches)?"mobile":"desktop";
+  const lang=(document.documentElement.lang||navigator.language||"es").slice(0,2);
+  function track(event_type,props){ try{ fetch(SB_URL+"/rest/v1/analytics_events",{method:"POST",keepalive:true,headers:{"Content-Type":"application/json","apikey":SB_KEY,"Authorization":"Bearer "+SB_KEY,"Prefer":"return=minimal"},body:JSON.stringify({event_type:event_type,session_id:sid,page:"hotel_panel",channel:"web_chat",lang:lang,device:device,referrer:(document.referrer||"direct"),props:props||{}})}).catch(function(){});}catch(e){} }
+  return { track: track };
+})();
 const AUTO_REFRESH_MS = 60000;
 
 const $ = id => document.getElementById(id);
@@ -680,6 +722,49 @@ async function loadEscalations(){
   }
 }
 
+
+// === Metricas (analitica web · lee agregados via RPC SECURITY DEFINER) ===
+function renderMetrics(d){
+  const t = d.totals || {};
+  function kpi(label,val,sub){ return '<div class="kpi"><div class="label">'+label+'</div><div class="value">'+(val==null?0:val)+'</div><div class="sub">'+(sub||"")+'</div></div>'; }
+  function tbl(title,obj){
+    const rows = Object.entries(obj||{}).sort((a,b)=>b[1]-a[1]).map(function(e){ return '<tr><td>'+esc(e[0])+'</td><td style="text-align:right">'+e[1]+'</td></tr>'; }).join('');
+    return '<h2 class="section">'+title+'</h2><div class="tbl-wrap"><table><thead><tr><th>Categor&iacute;a</th><th style="text-align:right">Eventos</th></tr></thead><tbody>'+(rows||'<tr><td colspan="2">Sin datos a&uacute;n</td></tr>')+'</tbody></table></div>';
+  }
+  let html = '<div class="kpis">'+
+    kpi("P&aacute;ginas vistas", t.page_views, "sesiones: "+(t.sessions||0))+
+    kpi("Sesiones", t.sessions, "&uacute;nicas")+
+    kpi("Mensajes enviados", t.messages_sent, "por hu&eacute;spedes")+
+    kpi("Clicks en sugerencias", t.suggestion_clicks, "")+
+    kpi("Intenci&oacute;n de reserva", t.reservation_intents, "mensajes con 'reserva'")+
+    '</div>';
+  html += tbl("Por tipo de evento", d.by_event);
+  html += tbl("Por dispositivo (segmentaci&oacute;n)", d.by_device);
+  html += tbl("Por idioma (segmentaci&oacute;n)", d.by_lang);
+  const days = (d.by_day||[]).map(function(r){ return '<tr><td>'+esc(r.day)+'</td><td style="text-align:right">'+r.c+'</td></tr>'; }).join('');
+  html += '<h2 class="section">Por d&iacute;a</h2><div class="tbl-wrap"><table><thead><tr><th>D&iacute;a</th><th style="text-align:right">Eventos</th></tr></thead><tbody>'+(days||'<tr><td colspan="2">Sin datos a&uacute;n</td></tr>')+'</tbody></table></div>';
+  html += '<p style="font-size:.72rem;color:#6B6657;margin-top:.6rem">Ventana: &uacute;ltimos '+(d.window_days||30)+' d&iacute;as &middot; fuente: tabla analytics_events (Supabase) v&iacute;a funci&oacute;n de agregados.</p>';
+  return html;
+}
+async function loadMetrics(){
+  const target = $("metricsArea");
+  target.innerHTML = '<div class="skeleton" style="min-height:200px"></div>';
+  const days = parseInt(($("metDays") && $("metDays").value) || "30", 10);
+  try{
+    const r = await fetch(SB_URL + "/rest/v1/rpc/analytics_overview", {
+      method:"POST",
+      headers:{ "Content-Type":"application/json", "apikey":SB_KEY, "Authorization":"Bearer "+SB_KEY },
+      body: JSON.stringify({ days: days })
+    });
+    if(!r.ok) throw new Error("HTTP "+r.status);
+    const d = await r.json();
+    target.innerHTML = renderMetrics(d);
+  }catch(e){
+    target.innerHTML = '<div class="state-box">&#9888;&#65039; No pude cargar las m&eacute;tricas. ('+esc(e.message)+') <div style="margin-top:.4rem"><button type="button">&#8635; Reintentar</button></div></div>';
+    target.querySelector("button").addEventListener("click", loadMetrics);
+  }
+}
+
 // ─── Tabs / navegación ───────────────────────────────────────────────────────
 const LOADERS = {
   today: loadToday,
@@ -687,6 +772,7 @@ const LOADERS = {
   reservations: loadReservations,
   conversations: loadConversations,
   escalations: loadEscalations,
+  metrics: loadMetrics,
 };
 const loaded = new Set();
 
@@ -725,13 +811,29 @@ $("availDays").addEventListener("change", loadAvailability);
 $("availStart").addEventListener("change", loadAvailability);
 $("resStatus").addEventListener("change", loadReservations);
 $("escStatus").addEventListener("change", loadEscalations);
+$("metDays").addEventListener("change", loadMetrics);
 
 // ─── Init ────────────────────────────────────────────────────────────────────
-$("availStart").min = new Date().toISOString().slice(0,10);
-checkHealth();
-setInterval(checkHealth, 45000);
-loaded.add("today");
-loadToday();
+function boot(){
+  $("availStart").min = new Date().toISOString().slice(0,10);
+  checkHealth();
+  setInterval(checkHealth, 45000);
+  loaded.add("today");
+  loadToday();
+}
+// === Login simulado: admin / admin (prellenado) ===
+(function initLogin(){
+  const ADMIN_USER="admin", ADMIN_PASS="admin";
+  function enter(){ $("loginOverlay").style.display="none"; try{ PANEL_ANALYTICS.track("page_view", {}); }catch(e){} boot(); }
+  const lo=$("logoutBtn"); if(lo) lo.addEventListener("click", function(){ sessionStorage.removeItem("hotelai_admin_auth"); location.reload(); });
+  if (sessionStorage.getItem("hotelai_admin_auth")==="1"){ enter(); return; }
+  $("loginForm").addEventListener("submit", function(e){
+    e.preventDefault();
+    const u=$("loginUser").value.trim(), p=$("loginPass").value;
+    if (u===ADMIN_USER && p===ADMIN_PASS){ sessionStorage.setItem("hotelai_admin_auth","1"); enter(); }
+    else { $("loginError").style.display="block"; }
+  });
+})();
 </script>
 </body>
 </html>

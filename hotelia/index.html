@@ -286,6 +286,30 @@ body{
 
 const IS_LOCAL = ["localhost", "127.0.0.1"].includes(location.hostname);
 const BACKEND_URL = IS_LOCAL ? "" : "https://hotelai-kg75.onrender.com";
+
+/* === Analitica de uso · eventos write-only a Supabase (clave publica; seguridad por RLS) === */
+const ANALYTICS = (function(){
+  const SB_URL = "https://myebxfostbafuogfymqa.supabase.co";
+  const SB_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Im15ZWJ4Zm9zdGJhZnVvZ2Z5bXFhIiwicm9sZSI6ImFub24iLCJpYXQiOjE3Nzk4MjAyMjAsImV4cCI6MjA5NTM5NjIyMH0.ZkIJvOa_bvRX3hlwKWyEuy3CI2hOxEYau2ojbCQacJY";
+  const PAGE = "guest_chat";
+  let sid = sessionStorage.getItem("hotelai_sid");
+  const fresh = !sid;
+  if (fresh){ sid = (window.crypto && crypto.randomUUID) ? crypto.randomUUID() : (Date.now()+"-"+Math.random().toString(16).slice(2)); sessionStorage.setItem("hotelai_sid", sid); }
+  const device = (window.matchMedia && matchMedia("(max-width:640px)").matches) ? "mobile" : "desktop";
+  const lang = (document.documentElement.lang || navigator.language || "es").slice(0,2);
+  function track(event_type, props){
+    try{
+      fetch(SB_URL + "/rest/v1/analytics_events", {
+        method:"POST", keepalive:true,
+        headers:{ "Content-Type":"application/json", "apikey":SB_KEY, "Authorization":"Bearer "+SB_KEY, "Prefer":"return=minimal" },
+        body: JSON.stringify({ event_type:event_type, session_id:sid, page:PAGE, channel:"web_chat", lang:lang, device:device, referrer:(document.referrer||"direct"), props:props||{} })
+      }).catch(function(){});
+    }catch(e){}
+  }
+  if (fresh) track("session_start", {});
+  track("page_view", {});
+  return { track: track };
+})();
 const ENDPOINT = "/api/web-chat/inbound";
 const HEALTH = "/healthz";
 const COLD_START_HINT_MS = 6000;
@@ -390,7 +414,7 @@ function renderChips(){
     const b = document.createElement("button");
     b.type = "button";
     b.textContent = s.label;
-    b.addEventListener("click", () => sendText(s.prompt));
+    b.addEventListener("click", () => { try{ ANALYTICS.track("suggestion_click", {text: s.prompt}); }catch(e){} sendText(s.prompt); });
     wrap.appendChild(b);
   }
   body.appendChild(wrap);
@@ -448,6 +472,7 @@ async function callBackend(text){
 async function sendText(text){
   text = (text || "").trim();
   if (!text || sending) return;
+  try { ANALYTICS.track("message_sent", {len: text.length}); if (/reserv/i.test(text)) ANALYTICS.track("reservation_intent", {}); } catch(e){}
   sending = true;
   updateSendBtn();
 
