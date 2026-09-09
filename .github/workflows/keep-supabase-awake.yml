@@ -1,0 +1,28 @@
+# El plan free de Supabase pausa el proyecto tras 7 dias sin actividad, y con el
+# proyecto pausado se caen /liveshop/ y /hotelia/ (realtime + analitica).
+# Este job le pega una vez por dia para que nunca llegue a ese limite.
+name: keep-supabase-awake
+
+on:
+  schedule:
+    - cron: "17 6 * * *"   # todos los dias 06:17 UTC
+  workflow_dispatch:        # y a mano desde la pestana Actions
+
+jobs:
+  ping:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Ping Supabase REST
+        env:
+          SB_URL: https://myebxfostbafuogfymqa.supabase.co
+          # anon key: es publica, ya viaja en el HTML de las demos
+          SB_KEY: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Im15ZWJ4Zm9zdGJhZnVvZ2Z5bXFhIiwicm9sZSI6ImFub24iLCJpYXQiOjE3Nzk4MjAyMjAsImV4cCI6MjA5NTM5NjIyMH0.ZkIJvOa_bvRX3hlwKWyEuy3CI2hOxEYau2ojbCQacJY
+        run: |
+          code=$(curl -s -o /tmp/body.txt -w "%{http_code}" \
+            -H "apikey: $SB_KEY" -H "Authorization: Bearer $SB_KEY" \
+            "$SB_URL/rest/v1/analytics_events?select=id&limit=1")
+          echo "HTTP $code"
+          if [ "$code" != "200" ]; then
+            echo "El proyecto puede estar pausado. Respuesta:"; cat /tmp/body.txt; exit 1
+          fi
+          echo "Supabase despierto."
